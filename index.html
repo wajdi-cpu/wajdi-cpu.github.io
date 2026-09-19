@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Akiless // Latest Activity</title>
+  <meta name="description" content="Akiless (wajdi-cpu) - Offensive Security Practitioner & Cybersecurity Student">
+  
+  <!-- Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+  <!-- Interactive Background Canvas & Ambient Orbs -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="bg-glow-orb orb-1"></div>
+  <div class="bg-glow-orb orb-2"></div>
+
+  <!-- Mobile Top Bar -->
+  <div class="mobile-top-bar">
+    <a href="index.html" class="mobile-brand">
+      <span>λ</span> akiless
+    </a>
+    <button class="terminal-trigger" style="background:none; border:none; color:var(--accent-emerald); font-size:1.2rem; cursor:pointer;" title="Terminal">
+      &gt;_
+    </button>
+  </div>
+
+  <!-- Floating Glass Dock (Hafedh Guenichi Style) -->
+  <nav class="glass-dock" aria-label="Main Navigation">
+    <a href="index.html" class="dock-item" title="Latest Activity">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <span class="dock-tooltip">~/latest</span>
+    </a>
+    <a href="whoami.html" class="dock-item" title="About Akiless">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="dock-tooltip">~/whoami</span>
+    </a>
+    <a href="projects.html" class="dock-item" title="Projects & Tooling">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      <span class="dock-tooltip">~/projects</span>
+    </a>
+    <a href="certifications.html" class="dock-item" title="Certifications">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 21l-5-3-5 3 1.523-8.11"/></svg>
+      <span class="dock-tooltip">~/certifications</span>
+    </a>
+    <a href="blogs.html" class="dock-item" title="Medium Writeups">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      <span class="dock-tooltip">~/blogs</span>
+    </a>
+  </nav>
+
+  <!-- Floating Quick Actions (Terminal & GitHub) -->
+  <div class="floating-actions">
+    <button class="action-fab terminal-fab terminal-trigger" title="Open Interactive Terminal">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+      <span class="action-tooltip">Easter Egg Terminal</span>
+    </button>
+    <a href="https://github.com/wajdi-cpu" target="_blank" rel="noopener noreferrer" class="action-fab" title="GitHub Profile">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+      <span class="action-tooltip">GitHub @wajdi-cpu</span>
+    </a>
+  </div>
+
+  <!-- Interactive Terminal Modal -->
+  <div id="terminal-modal" class="terminal-modal-backdrop">
+    <div class="terminal-window">
+      <div class="terminal-header">
+        <div class="terminal-controls">
+          <span id="terminal-close-btn" class="control-dot dot-red" title="Close"></span>
+          <span class="control-dot dot-yellow"></span>
+          <span class="control-dot dot-green"></span>
+        </div>
+        <span class="terminal-title">akiless@redteam: ~ (zsh)</span>
+        <div style="width:40px;"></div>
+      </div>
+      <div class="terminal-body">
+        <div id="terminal-output" class="terminal-output">
+          <div class="terminal-line"><span style="color:#10b981;">Akiless Cyber Terminal [Version 2.4.0]</span></div>
+          <div class="terminal-line"><span style="color:#94a3b8;">Type <span style="color:#38bdf8;">help</span> to inspect available commands or <span style="color:#38bdf8;">whoami</span> for bio.</span></div>
+        </div>
+        <div class="terminal-prompt-row">
+          <span class="terminal-prompt-user">akiless@redteam:~$</span>
+          <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" placeholder="type a command...">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content Layout -->
+  <div class="page-container">
+    <!-- Hero Banner -->
+    <header class="hero-section">
+      <div class="hero-text-col">
+        <div class="hero-status-pill">
+          <span class="pulse-dot"></span>
+          <span>NANITES: ONLINE &bull; RED TEAM INTERN @ ISET MAHDIA</span>
+        </div>
+        <h1 class="hero-name">
+          Hey, I'm <span class="hero-gradient-text">Akiless</span>
+        </h1>
+        <div class="hero-typewriter-box">
+          &gt; <span id="typewriter-text"></span><span class="typewriter-cursor">|</span>
+        </div>
+        <p class="hero-desc">
+          Offensive security practitioner focused on cloud penetration testing, red teaming, and low-level reverse engineering. 
+          Welcome to my digital workspace and writeup hub.
+        </p>
+        <div class="hero-actions">
+          <a href="whoami.html" class="btn-cyber primary">
+            Explore whoami &rarr;
+          </a>
+          <button class="btn-cyber secondary terminal-trigger">
+            Launch Terminal &gt;_
+          </button>
+        </div>
+      </div>
+
+      <div class="hero-avatar-col">
+        <div class="avatar-gear-wrapper">
+          <svg class="avatar-gear-svg" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 242.0 130.0 L 254.6 139.8 L 253.1 152.0 L 237.8 160.4 L 233.5 172.9 L 241.4 186.7 L 235.3 197.4 L 218.0 199.3 L 209.2 209.2 L 211.2 225.1 L 201.5 232.6 L 184.7 227.7 L 172.9 233.5 L 168.6 248.9 L 156.8 252.1 L 143.2 241.2 L 130.0 242.0 L 120.2 254.6 L 108.0 253.1 L 99.6 237.8 L 87.1 233.5 L 73.3 241.4 L 62.6 235.3 L 60.7 218.0 L 50.8 209.2 L 34.9 211.2 L 27.4 201.5 L 32.3 184.7 L 26.5 172.9 L 11.1 168.6 L 7.9 156.8 L 18.8 143.2 L 18.0 130.0 L 5.4 120.2 L 6.9 108.0 L 22.2 99.6 L 26.5 87.1 L 18.6 73.3 L 24.7 62.6 L 42.0 60.7 L 50.8 50.8 L 48.8 34.9 L 58.5 27.4 L 75.3 32.3 L 87.1 26.5 L 91.4 11.1 L 103.2 7.9 L 116.8 18.8 L 130.0 18.0 L 139.8 5.4 L 152.0 6.9 L 160.4 22.2 L 172.9 26.5 L 186.7 18.6 L 197.4 24.7 L 199.3 42.0 L 209.2 50.8 L 225.1 48.8 L 232.6 58.5 L 227.7 75.3 L 233.5 87.1 L 248.9 91.4 L 252.1 103.2 L 241.2 116.8 Z" 
+                  fill="none" 
+                  stroke="url(#naniteGearGrad)" 
+                  stroke-width="3" />
+            <circle cx="130" cy="130" r="102" fill="none" stroke="rgba(125, 207, 255, 0.35)" stroke-width="1.5" stroke-dasharray="8 6" />
+            <circle cx="130" cy="130" r="95" fill="none" stroke="rgba(255, 158, 100, 0.45)" stroke-width="1" />
+            <defs>
+              <linearGradient id="naniteGearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ff9e64" />
+                <stop offset="50%" stop-color="#7dcfff" />
+                <stop offset="100%" stop-color="#bb9af7" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <img class="avatar-image-inner" 
+               src="./assets/avatar.png" 
+               alt="AkilesTheDark" 
+               onerror="window.handleImageError(this)">
+        </div>
+      </div>
+    </header>
+
+    <!-- Infinitely Scrolling Tech Marquee -->
+    <div class="marquee-container" aria-label="Security & Tech Stack">
+      <div class="marquee-content">
+        <span class="tech-tag-item">🛡️ Offensive Security</span>
+        <span class="tech-tag-item">⚡ Red Teaming</span>
+        <span class="tech-tag-item">☁️ Cloud Pentesting</span>
+        <span class="tech-tag-item">🔬 Reverse Engineering</span>
+        <span class="tech-tag-item">🐧 Kali Linux</span>
+        <span class="tech-tag-item">🐍 Python</span>
+        <span class="tech-tag-item">🐹 Go</span>
+        <span class="tech-tag-item">🔍 Ghidra</span>
+        <span class="tech-tag-item">🎯 Impacket</span>
+        <span class="tech-tag-item">🌐 Burp Suite</span>
+        <span class="tech-tag-item">🦈 Wireshark</span>
+        <span class="tech-tag-item">🐳 Docker</span>
+        <span class="tech-tag-item">☁️ AWS</span>
+        <!-- Duplicated for seamless loop -->
+        <span class="tech-tag-item">🛡️ Offensive Security</span>
+        <span class="tech-tag-item">⚡ Red Teaming</span>
+        <span class="tech-tag-item">☁️ Cloud Pentesting</span>
+        <span class="tech-tag-item">🔬 Reverse Engineering</span>
+        <span class="tech-tag-item">🐧 Kali Linux</span>
+        <span class="tech-tag-item">🐍 Python</span>
+        <span class="tech-tag-item">🐹 Go</span>
+        <span class="tech-tag-item">🔍 Ghidra</span>
+        <span class="tech-tag-item">🎯 Impacket</span>
+        <span class="tech-tag-item">🌐 Burp Suite</span>
+        <span class="tech-tag-item">🦈 Wireshark</span>
+        <span class="tech-tag-item">🐳 Docker</span>
+        <span class="tech-tag-item">☁️ AWS</span>
+      </div>
+    </div>
+
+    <!-- Section Header for Activity Stream -->
+    <section>
+      <div class="section-header">
+        <div class="section-tag">
+          <span>// STREAM</span>
+        </div>
+        <h2 class="section-title">Latest Activity</h2>
+        <p class="section-desc">
+          Aggregated activity stream combining technical writeups, certification milestones, and tool developments.
+        </p>
+      </div>
+
+      <!-- Activity Timeline Container -->
+      <div id="timeline-container"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+      <div>&copy; 2026 Akiless (wajdi-cpu). Built with pure static web standards.</div>
+      <div class="footer-status">
+        <span class="pulse-dot"></span>
+        <span>Online &bull; GitHub Pages</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="./js/main.js"></script>
+  <script src="./js/data-loader.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      DataLoader.initTimeline('timeline-container');
+    });
+  </script>
+</body>
+</html>

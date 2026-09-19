@@ -1,0 +1,67 @@
+{
+  "blogs": [
+    {
+      "title": "Introduction to Active Directory Enumeration & Kerberoasting",
+      "date": "2026-08-15",
+      "url": "https://medium.com/@akiless/intro-to-active-directory-kerberoasting",
+      "description": "A deep dive into extracting service ticket hashes from vulnerable Active Directory services using Impacket.",
+      "image": "assets/blogs/kerberoasting.png"
+    },
+    {
+      "title": "Reverse Engineering x86-64 Binaries with Ghidra & GDB",
+      "date": "2026-07-22",
+      "url": "https://medium.com/@akiless/reverse-engineering-x86-64-ghidra",
+      "description": "Deconstructing stack frames, calling conventions, and patching security checks in custom CTF binaries.",
+      "image": "assets/blogs/ghidra-re.png"
+    }
+  ],
+  "certs": [
+    {
+      "name": "CompTIA Security+",
+      "status": "earned",
+      "percent": 100,
+      "dateEarned": "2025-11-20",
+      "issuer": "CompTIA",
+      "image": "assets/certs/security-plus.png"
+    },
+    {
+      "name": "Certified Red Team Operator (CRTO)",
+      "status": "in-progress",
+      "percent": 65,
+      "dateEarned": null,
+      "issuer": "Zero-Point Security",
+      "image": "assets/certs/crto.png"
+    },
+    {
+      "name": "Practical Network Penetration Tester (PNPT)",
+      "status": "in-progress",
+      "percent": 40,
+      "dateEarned": null,
+      "issuer": "TCM Security",
+      "image": "assets/certs/pnpt.png"
+    }
+  ],
+  "projects": [
+    {
+      "name": "ares-c2",
+      "description": "Lightweight covert command-and-control beacon and team server built in Go and Python.",
+      "tags": ["Go", "Red Team", "C2", "Offensive"],
+      "url": "https://github.com/wajdi-cpu/ares-c2",
+      "image": "assets/projects/ares.png"
+    },
+    {
+      "name": "cloud-recon-toolkit",
+      "description": "Automated AWS and Azure IAM privilege escalation and misconfiguration scanner.",
+      "tags": ["Python", "Cloud", "AWS", "Security"],
+      "url": "https://github.com/wajdi-cpu/cloud-recon",
+      "image": "assets/projects/cloud-recon.png"
+    },
+    {
+      "name": "rev-kernel-hook",
+      "description": "Proof-of-concept Linux LKM rootkit and syscall hooking research project.",
+      "tags": ["C", "Linux", "Kernel", "Reverse Engineering"],
+      "url": "https://github.com/wajdi-cpu/rev-kernel-hook",
+      "image": "assets/projects/kernel-hook.png"
+    }
+  ]
+}
