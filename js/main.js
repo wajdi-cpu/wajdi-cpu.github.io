@@ -1,24 +1,17 @@
 /**
  * main.js - Generator Rex Nanite & Mechanical Gear Cyber Engine
- * Tokyo Night Colors (#1a1b26, #16161e, #7dcfff, #ff9e64, #7aa2f7, #bb9af7)
+ * Tokyo Night Palette (#1a1b26, #16161e, #1f2335, #7dcfff, #ff9e64, #7aa2f7, #bb9af7)
  * Features:
- *  - Show-accurate Generator Rex Nanites (3 articulated micro-claws, spinning micro-cogs, pulsing core)
- *  - Background Interlocking Mechanical Gear Systems (meshed spur gears with calculated gear ratios)
- *  - Rex Nanite Assembly & Magnetic Swarming
- *  - Mechanical Typewriter & Cyber Terminal
+ *  - Show-accurate Generator Rex Nanites (Hexagonal carapace, 4 articulated hydraulic limbs, spinning micro-cog, glowing plasma core, energy lattice arcs)
+ *  - Show-accurate Interlocking Mechanical Gear Assemblies (Slam Cannon & Smack Hand style spur gears with involute teeth, spoke windows, keyways, meshing gear trains)
+ *  - Organized Cyber Terminal with categorized commands, quick action toolbar, and command history
+ *  - Clean Typewriter & Glass Dock Navigation
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Initialize Generator Rex Nanite & Mechanical Gear Canvas
   initNaniteAndGearCanvas();
-
-  // 2. Initialize Mechanical Typewriter Effect
   initMechanicalTypewriter();
-
-  // 3. Highlight Active Dock Item
   initDockNavigation();
-
-  // 4. Initialize Interactive Cyber Terminal
   initCyberTerminal();
 });
 
@@ -33,7 +26,7 @@ function initNaniteAndGearCanvas() {
   let width = (canvas.width = window.innerWidth);
   let height = (canvas.height = window.innerHeight);
 
-  let mouse = { x: null, y: null, radius: 180, active: false };
+  let mouse = { x: null, y: null, radius: 200, active: false };
 
   window.addEventListener('mousemove', (e) => {
     mouse.x = e.clientX;
@@ -54,26 +47,27 @@ function initNaniteAndGearCanvas() {
   });
 
   /* ------------------------------------------------------------------------
-     A. Mechanical Gear Engine (Accurate Involute Spur Gears with Spokes)
+     A. Mechanical Gear Engine (Generator Rex Slam Cannon & Smack Hand Style)
      ------------------------------------------------------------------------ */
-  function drawMechanicalGear(ctx, cx, cy, rOuter, rInner, teeth, angle, color, spokeRadius = 0, numSpokes = 4) {
+  function drawMechanicalGear(ctx, cx, cy, rOuter, rInner, teeth, angle, color, spokeRadius = 0, numSpokes = 5) {
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(angle);
 
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
-    ctx.lineWidth = 1.2;
+    ctx.lineWidth = 1.3;
 
     const step = (Math.PI * 2) / teeth;
     ctx.beginPath();
 
+    // Involute tooth geometry with chamfered tips
     for (let i = 0; i < teeth; i++) {
       const a = i * step;
-      const a1 = a + step * 0.15;
-      const a2 = a + step * 0.35;
-      const a3 = a + step * 0.65;
-      const a4 = a + step * 0.85;
+      const a1 = a + step * 0.18;
+      const a2 = a + step * 0.38;
+      const a3 = a + step * 0.62;
+      const a4 = a + step * 0.82;
 
       // Tooth root
       const x0 = Math.cos(a) * rInner;
@@ -81,11 +75,11 @@ function initNaniteAndGearCanvas() {
       if (i === 0) ctx.moveTo(x0, y0);
       else ctx.lineTo(x0, y0);
 
-      // Incline to tip
+      // Flank rise to outer tip
       ctx.lineTo(Math.cos(a1) * rOuter, Math.sin(a1) * rOuter);
-      // Tooth crest
+      // Tooth crest / crown
       ctx.lineTo(Math.cos(a2) * rOuter, Math.sin(a2) * rOuter);
-      // Decline to root
+      // Flank descent to root
       ctx.lineTo(Math.cos(a3) * rInner, Math.sin(a3) * rInner);
       // Root valley
       ctx.lineTo(Math.cos(a4) * rInner, Math.sin(a4) * rInner);
@@ -94,23 +88,36 @@ function initNaniteAndGearCanvas() {
     ctx.stroke();
 
     // Outer gear rim inner circle
-    const rimInner = rInner * 0.78;
+    const rimInner = rInner * 0.8;
     ctx.beginPath();
     ctx.arc(0, 0, rimInner, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Central axle hub and keyway
-    const hubR = rInner * 0.28;
+    // Concentric pitch circle guideline (blueprint dashed line)
+    const pitchR = (rOuter + rInner) / 2;
+    ctx.save();
+    ctx.setLineDash([4, 4]);
+    ctx.strokeStyle = color.replace(/[\d\.]+\)$/, '0.04)');
+    ctx.beginPath();
+    ctx.arc(0, 0, pitchR, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+
+    // Central axle hub
+    const hubR = rInner * 0.32;
     ctx.beginPath();
     ctx.arc(0, 0, hubR, 0, Math.PI * 2);
     ctx.stroke();
 
-    // Axle center hole
+    // Axle center hole with rectangular drive keyway notch
+    const holeR = hubR * 0.45;
     ctx.beginPath();
-    ctx.arc(0, 0, hubR * 0.45, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.arc(0, 0, holeR, 0, Math.PI * 2);
+    // Keyway slot
+    ctx.rect(-holeR * 0.35, -holeR * 1.35, holeR * 0.7, holeR * 0.7);
+    ctx.stroke();
 
-    // Spoke cutouts (Mechanical gear lightening windows)
+    // Lightening hole spoke cutouts (Rex construct blueprint windows)
     if (numSpokes > 0 && spokeRadius > 0) {
       const spokeDist = (rimInner + hubR) / 2;
       for (let s = 0; s < numSpokes; s++) {
@@ -120,13 +127,20 @@ function initNaniteAndGearCanvas() {
         ctx.beginPath();
         ctx.arc(sx, sy, spokeRadius, 0, Math.PI * 2);
         ctx.stroke();
+
+        // Mechanical rivet / bolt near rim
+        const boltX = Math.cos(sAngle + step) * (rimInner * 0.94);
+        const boltY = Math.sin(sAngle + step) * (rimInner * 0.94);
+        ctx.beginPath();
+        ctx.arc(boltX, boltY, 1.2, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
 
     ctx.restore();
   }
 
-  // Interlocking Gear Clusters (Subtle background blueprint mechanical assemblies)
+  // Interlocking Gear Clusters (Blueprint Mechanical Assemblies)
   let gearClusters = [];
 
   function setupGearSystems() {
@@ -134,56 +148,56 @@ function initNaniteAndGearCanvas() {
 
     // Cluster 1: Top Right Rex Mechanical Assembly (3 meshed gears)
     const g1Teeth = 20;
-    const g1Outer = 95;
-    const g1Inner = 80;
+    const g1Outer = 100;
+    const g1Inner = 84;
 
     const g2Teeth = 12;
-    const g2Outer = 58;
-    const g2Inner = 48;
+    const g2Outer = 62;
+    const g2Inner = 50;
 
     const g3Teeth = 8;
-    const g3Outer = 40;
-    const g3Inner = 32;
+    const g3Outer = 44;
+    const g3Inner = 34;
 
-    const c1X = width - 120;
-    const c1Y = 130;
+    const c1X = width - 110;
+    const c1Y = 120;
 
-    // Meshed center-to-center distance = rInner1 + rInner2 + toothDepth
-    const dist12 = (g1Outer + g1Inner)/2 + (g2Outer + g2Inner)/2 - 8;
-    const angle12 = Math.PI * 0.82;
+    // Center-to-center pitch distance
+    const dist12 = (g1Outer + g1Inner) / 2 + (g2Outer + g2Inner) / 2 - 8;
+    const angle12 = Math.PI * 0.8;
     const c2X = c1X + Math.cos(angle12) * dist12;
     const c2Y = c1Y + Math.sin(angle12) * dist12;
 
-    const dist23 = (g2Outer + g2Inner)/2 + (g3Outer + g3Inner)/2 - 6;
-    const angle23 = angle12 + Math.PI * 0.55;
+    const dist23 = (g2Outer + g2Inner) / 2 + (g3Outer + g3Inner) / 2 - 6;
+    const angle23 = angle12 + Math.PI * 0.52;
     const c3X = c2X + Math.cos(angle23) * dist23;
     const c3Y = c2Y + Math.sin(angle23) * dist23;
 
     gearClusters.push([
-      { x: c1X, y: c1Y, rO: g1Outer, rI: g1Inner, teeth: g1Teeth, speed: 0.003, color: 'rgba(122, 162, 247, 0.07)', spokeR: 12, spokes: 5 },
-      { x: c2X, y: c2Y, rO: g2Outer, rI: g2Inner, teeth: g2Teeth, speed: -0.003 * (g1Teeth / g2Teeth), color: 'rgba(255, 158, 100, 0.08)', spokeR: 8, spokes: 4 },
-      { x: c3X, y: c3Y, rO: g3Outer, rI: g3Inner, teeth: g3Teeth, speed: 0.003 * (g1Teeth / g3Teeth), color: 'rgba(125, 207, 255, 0.08)', spokeR: 5, spokes: 3 }
+      { x: c1X, y: c1Y, rO: g1Outer, rI: g1Inner, teeth: g1Teeth, speed: 0.003, color: 'rgba(122, 162, 247, 0.09)', spokeR: 13, spokes: 5 },
+      { x: c2X, y: c2Y, rO: g2Outer, rI: g2Inner, teeth: g2Teeth, speed: -0.003 * (g1Teeth / g2Teeth), color: 'rgba(255, 158, 100, 0.1)', spokeR: 8, spokes: 4 },
+      { x: c3X, y: c3Y, rO: g3Outer, rI: g3Inner, teeth: g3Teeth, speed: 0.003 * (g1Teeth / g3Teeth), color: 'rgba(125, 207, 255, 0.09)', spokeR: 5, spokes: 3 }
     ]);
 
     // Cluster 2: Bottom Left Heavy Machinery Gear System (2 heavy meshed gears)
     const b1Teeth = 24;
-    const b1Outer = 130;
-    const b1Inner = 110;
+    const b1Outer = 135;
+    const b1Inner = 114;
 
     const b2Teeth = 14;
-    const b2Outer = 75;
-    const b2Inner = 62;
+    const b2Outer = 80;
+    const b2Inner = 66;
 
-    const b1X = 140;
+    const b1X = 130;
     const b1Y = height - 100;
-    const distB = (b1Outer + b1Inner)/2 + (b2Outer + b2Inner)/2 - 10;
+    const distB = (b1Outer + b1Inner) / 2 + (b2Outer + b2Inner) / 2 - 10;
     const angleB = -Math.PI * 0.28;
     const b2X = b1X + Math.cos(angleB) * distB;
     const b2Y = b1Y + Math.sin(angleB) * distB;
 
     gearClusters.push([
-      { x: b1X, y: b1Y, rO: b1Outer, rI: b1Inner, teeth: b1Teeth, speed: -0.002, color: 'rgba(122, 162, 247, 0.06)', spokeR: 18, spokes: 6 },
-      { x: b2X, y: b2Y, rO: b2Outer, rI: b2Inner, teeth: b2Teeth, speed: 0.002 * (b1Teeth / b2Teeth), color: 'rgba(255, 158, 100, 0.07)', spokeR: 10, spokes: 4 }
+      { x: b1X, y: b1Y, rO: b1Outer, rI: b1Inner, teeth: b1Teeth, speed: -0.002, color: 'rgba(122, 162, 247, 0.08)', spokeR: 18, spokes: 6 },
+      { x: b2X, y: b2Y, rO: b2Outer, rI: b2Inner, teeth: b2Teeth, speed: 0.002 * (b1Teeth / b2Teeth), color: 'rgba(255, 158, 100, 0.09)', spokeR: 11, spokes: 4 }
     ]);
   }
 
@@ -196,27 +210,28 @@ function initNaniteAndGearCanvas() {
     constructor() {
       this.x = Math.random() * width;
       this.y = Math.random() * height;
-      this.vx = (Math.random() - 0.5) * 0.85;
-      this.vy = (Math.random() - 0.5) * 0.85;
+      this.vx = (Math.random() - 0.5) * 0.8;
+      this.vy = (Math.random() - 0.5) * 0.8;
       this.angle = Math.random() * Math.PI * 2;
-      this.rotSpeed = (Math.random() - 0.5) * 0.035;
-      this.coreRadius = Math.random() * 2 + 2.5;
+      this.rotSpeed = (Math.random() - 0.5) * 0.03;
+      this.coreRadius = Math.random() * 2 + 2.8;
 
       // Tokyo Night Nanite Archetypes:
-      // Overdrive Orange (Rex active build) vs Tokyo Cyan (Providence Standard)
-      this.isOverdrive = Math.random() > 0.6;
+      // Overdrive Amber (Rex active construct) vs Tokyo Cyan (Providence Standard)
+      this.isOverdrive = Math.random() > 0.65;
       this.coreColor = this.isOverdrive ? '#ff9e64' : '#7dcfff';
-      this.glowColor = this.isOverdrive ? 'rgba(255, 158, 100, ' : 'rgba(125, 207, 255, ';
+      this.limbColor = this.isOverdrive ? 'rgba(255, 158, 100, 0.85)' : 'rgba(125, 207, 255, 0.8)';
       this.pulsePhase = Math.random() * Math.PI * 2;
       this.microGearAngle = Math.random() * Math.PI * 2;
-      this.microGearSpeed = (Math.random() > 0.5 ? 1 : -1) * 0.08;
+      this.microGearSpeed = (Math.random() > 0.5 ? 1 : -1) * 0.07;
+      this.legsCount = 4; // Show-accurate 4 articulated limbs
     }
 
     update() {
       this.x += this.vx;
       this.y += this.vy;
       this.angle += this.rotSpeed;
-      this.pulsePhase += 0.06;
+      this.pulsePhase += 0.05;
       this.microGearAngle += this.microGearSpeed;
 
       // Screen boundaries wrap / bounce
@@ -234,13 +249,16 @@ function initNaniteAndGearCanvas() {
         if (dist < mouse.radius) {
           const angle = Math.atan2(dy, dx);
           const force = (mouse.radius - dist) / mouse.radius;
-          this.vx += Math.cos(angle) * force * 0.35;
-          this.vy += Math.sin(angle) * force * 0.35;
+          this.vx += Math.cos(angle) * force * 0.4;
+          this.vy += Math.sin(angle) * force * 0.4;
+
+          // Turn toward movement direction when swarming
+          this.angle = angle + Math.PI / 2;
 
           const speed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
-          if (speed > 3.2) {
-            this.vx = (this.vx / speed) * 3.2;
-            this.vy = (this.vy / speed) * 3.2;
+          if (speed > 3.5) {
+            this.vx = (this.vx / speed) * 3.5;
+            this.vy = (this.vy / speed) * 3.5;
           }
         }
       }
@@ -254,78 +272,96 @@ function initNaniteAndGearCanvas() {
       ctx.translate(this.x, this.y);
       ctx.rotate(this.angle);
 
-      const pulse = Math.sin(this.pulsePhase) * 0.25 + 0.9;
+      const pulse = Math.sin(this.pulsePhase) * 0.2 + 0.95;
 
-      // 1. Draw 3 Articulated Biomechanical Micro-Claws (Generator Rex intro style)
-      ctx.lineWidth = 1;
-      const claws = 3;
-      for (let c = 0; c < claws; c++) {
-        const cAngle = (c * Math.PI * 2) / claws;
+      // 1. Draw 4 Articulated Biomechanical Hydraulic Limbs (Show-accurate Generator Rex style)
+      ctx.lineWidth = 1.1;
+      const legFlex = Math.sin(this.pulsePhase * 1.5) * 0.15;
+
+      for (let c = 0; c < this.legsCount; c++) {
+        // Position legs at corners: 45°, 135°, 225°, 315°
+        const cAngle = (c * Math.PI * 2) / this.legsCount + (Math.PI / 4);
         ctx.save();
         ctx.rotate(cAngle);
 
-        // Arm segment 1: Upper mechanical strut
-        const seg1Len = this.coreRadius * 2.2;
-        const elbowX = seg1Len * 0.85;
-        const elbowY = seg1Len * 0.45;
+        const seg1Len = this.coreRadius * 2.1;
+        const kneeX = seg1Len * (0.8 + legFlex);
+        const kneeY = seg1Len * 0.55;
 
-        ctx.strokeStyle = this.isOverdrive ? 'rgba(255, 158, 100, 0.7)' : 'rgba(125, 207, 255, 0.65)';
+        // Limb Segment 1: Upper mechanical femur strut
+        ctx.strokeStyle = this.limbColor;
         ctx.beginPath();
         ctx.moveTo(0, 0);
-        ctx.lineTo(elbowX, elbowY);
+        ctx.lineTo(kneeX, kneeY);
         ctx.stroke();
 
-        // Elbow joint dot
-        ctx.fillStyle = '#fff';
+        // Knee hinge joint
+        ctx.fillStyle = '#ffffff';
         ctx.beginPath();
-        ctx.arc(elbowX, elbowY, 0.9, 0, Math.PI * 2);
+        ctx.arc(kneeX, kneeY, 0.95, 0, Math.PI * 2);
         ctx.fill();
 
-        // Arm segment 2: Forearm claw pincer angled inward
-        const tipX = elbowX + seg1Len * 0.75;
-        const tipY = elbowY - seg1Len * 0.2;
+        // Limb Segment 2: Articulated lower tibia pincer claw angled forward
+        const tipX = kneeX + seg1Len * 0.85;
+        const tipY = kneeY - seg1Len * 0.35;
         ctx.beginPath();
-        ctx.moveTo(elbowX, elbowY);
+        ctx.moveTo(kneeX, kneeY);
         ctx.lineTo(tipX, tipY);
         ctx.stroke();
 
-        // Micro-claw pincer point
+        // Micro-claw needle tip
         ctx.fillStyle = this.coreColor;
         ctx.beginPath();
-        ctx.arc(tipX, tipY, 1.1, 0, Math.PI * 2);
+        ctx.arc(tipX, tipY, 1.2, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.restore();
       }
 
-      // 2. Microscopic Rotating Nanite Cogwheel/Gear inside the hub
+      // 2. Armored Hexagonal Outer Pod / Chassis (Rex Nanite hull)
+      const hexR = this.coreRadius * 1.6;
+      ctx.strokeStyle = this.isOverdrive ? 'rgba(255, 158, 100, 0.65)' : 'rgba(122, 162, 247, 0.6)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let h = 0; h < 6; h++) {
+        const ha = (h * Math.PI) / 3;
+        const hx = Math.cos(ha) * hexR;
+        const hy = Math.sin(ha) * hexR;
+        if (h === 0) ctx.moveTo(hx, hy);
+        else ctx.lineTo(hx, hy);
+      }
+      ctx.closePath();
+      ctx.stroke();
+
+      // 3. Rotating Microscopic Internal Cogwheel (Nano-gear)
       ctx.save();
       ctx.rotate(this.microGearAngle);
       const mTeeth = 6;
-      const mR_out = this.coreRadius * 1.5;
-      const mR_in = this.coreRadius * 1.15;
-      ctx.strokeStyle = this.isOverdrive ? 'rgba(255, 158, 100, 0.8)' : 'rgba(122, 162, 247, 0.75)';
+      const mR_out = this.coreRadius * 1.35;
+      const mR_in = this.coreRadius * 1.05;
+      ctx.strokeStyle = this.isOverdrive ? 'rgba(255, 158, 100, 0.75)' : 'rgba(125, 207, 255, 0.7)';
+      ctx.lineWidth = 0.9;
       ctx.beginPath();
       for (let t = 0; t < mTeeth; t++) {
         const ta = (t * Math.PI * 2) / mTeeth;
         ctx.lineTo(Math.cos(ta) * mR_in, Math.sin(ta) * mR_in);
-        ctx.lineTo(Math.cos(ta + 0.25) * mR_out, Math.sin(ta + 0.25) * mR_out);
-        ctx.lineTo(Math.cos(ta + 0.5) * mR_out, Math.sin(ta + 0.5) * mR_out);
-        ctx.lineTo(Math.cos(ta + 0.75) * mR_in, Math.sin(ta + 0.75) * mR_in);
+        ctx.lineTo(Math.cos(ta + 0.22) * mR_out, Math.sin(ta + 0.22) * mR_out);
+        ctx.lineTo(Math.cos(ta + 0.45) * mR_out, Math.sin(ta + 0.45) * mR_out);
+        ctx.lineTo(Math.cos(ta + 0.68) * mR_in, Math.sin(ta + 0.68) * mR_in);
       }
       ctx.closePath();
       ctx.stroke();
       ctx.restore();
 
-      // 3. Glowing Spherical Nanite Reactor Core (Tokyo Night glowing core)
-      const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, this.coreRadius * 2 * pulse);
+      // 4. Glowing Plasma Reactor Core
+      const grad = ctx.createRadialGradient(0, 0, 0, 0, 0, this.coreRadius * 2.2 * pulse);
       grad.addColorStop(0, '#ffffff');
       grad.addColorStop(0.35, this.coreColor);
       grad.addColorStop(1, 'transparent');
 
       ctx.fillStyle = grad;
       ctx.beginPath();
-      ctx.arc(0, 0, this.coreRadius * 2 * pulse, 0, Math.PI * 2);
+      ctx.arc(0, 0, this.coreRadius * 2.2 * pulse, 0, Math.PI * 2);
       ctx.fill();
 
       ctx.restore();
@@ -339,9 +375,8 @@ function initNaniteAndGearCanvas() {
     nanites.push(new RexNanite());
   }
 
-  // Rotation angles for gear clusters
   let gearAngleTime = 0;
-  const maxCircuitDist = 140;
+  const maxCircuitDist = 145;
 
   /* ------------------------------------------------------------------------
      C. Main Render Loop
@@ -371,7 +406,7 @@ function initNaniteAndGearCanvas() {
       }
     }
 
-    // 2. Draw Nanite-to-Nanite Circuit Arcs & Nanite Bodies
+    // 2. Draw Nanite-to-Nanite Circuit Arcs & Nanites
     for (let i = 0; i < nanites.length; i++) {
       nanites[i].update();
       nanites[i].draw();
@@ -394,6 +429,17 @@ function initNaniteAndGearCanvas() {
           }
           ctx.lineWidth = 1;
           ctx.stroke();
+
+          // Occasional energy flow pulse packet traveling between nanites
+          if (Math.sin(gearAngleTime * 3 + i) > 0.8) {
+            const t = (Math.sin(gearAngleTime * 5 + j) + 1) / 2;
+            const px = nanites[i].x + (nanites[j].x - nanites[i].x) * t;
+            const py = nanites[i].y + (nanites[j].y - nanites[i].y) * t;
+            ctx.fillStyle = nanites[i].isOverdrive ? '#ff9e64' : '#7dcfff';
+            ctx.beginPath();
+            ctx.arc(px, py, 1.4, 0, Math.PI * 2);
+            ctx.fill();
+          }
         }
       }
 
@@ -490,7 +536,7 @@ function initDockNavigation() {
 }
 
 /* ==========================================================================
-   4. Interactive Cyber Terminal (Rex / Providence Inspired)
+   4. Interactive Cyber Terminal (Rex / Providence Inspired) - Organized
    ========================================================================== */
 function initCyberTerminal() {
   const modal = document.getElementById('terminal-modal');
@@ -500,6 +546,10 @@ function initCyberTerminal() {
   const terminalOutput = document.getElementById('terminal-output');
 
   if (!modal || !terminalInput || !terminalOutput) return;
+
+  // Command History Buffer
+  const commandHistory = [];
+  let historyIndex = -1;
 
   const openTerminal = () => {
     modal.classList.add('open');
@@ -525,74 +575,84 @@ function initCyberTerminal() {
 
   const commands = {
     help: () => `
-<span style="color:#7dcfff">[NANITE_SYSTEM // COMMANDS]</span>
-  <span style="color:#ff9e64">whoami</span>       - Display Akiless bio & red team status
-  <span style="color:#ff9e64">nanites</span>      - Nanite swarm diagnostics
-  <span style="color:#ff9e64">gears</span>        - Mechanical gear train telemetry
-  <span style="color:#ff9e64">builds</span>       - Generator Rex mechanical construct roster
-  <span style="color:#ff9e64">skills</span>       - Offensive security & engineering skills
-  <span style="color:#ff9e64">projects</span>     - Mechanical builds & GitHub tooling
-  <span style="color:#ff9e64">certs</span>        - Credential milestones & progress
-  <span style="color:#ff9e64">blogs</span>        - Medium publications & security writeups
-  <span style="color:#ff9e64">contact</span>      - GitHub / HTB / LinkedIn communication relays
-  <span style="color:#ff9e64">clear</span>        - Clear terminal HUD
-  <span style="color:#ff9e64">exit</span>         - Disengage terminal interface
+<div style="margin-bottom:0.4rem; color:#7dcfff; font-weight:700;">// GENERATOR REX CYBER TERMINAL &mdash; COMMAND DIRECTORY</div>
+<table style="width:100%; border-collapse:collapse; font-size:0.83rem;">
+  <tr style="border-bottom:1px solid rgba(125,207,255,0.2);"><td colspan="2" style="color:#bb9af7; padding:4px 0; font-weight:600;">[1] IDENTITY &amp; BIO</td></tr>
+  <tr><td style="color:#ff9e64; width:110px; padding:3px 0;">whoami</td><td style="color:#c0caf5;">Akiless operator bio, specialization &amp; academic path</td></tr>
+  <tr><td style="color:#ff9e64; padding:3px 0;">skills</td><td style="color:#c0caf5;">Offensive security toolset &amp; technical proficiencies</td></tr>
+  <tr><td style="color:#ff9e64; padding:3px 0;">contact</td><td style="color:#c0caf5;">Relay channels (GitHub, LinkedIn, HTB)</td></tr>
+
+  <tr style="border-bottom:1px solid rgba(125,207,255,0.2);"><td colspan="2" style="color:#bb9af7; padding:8px 0 4px; font-weight:600;">[2] NANITE &amp; GEAR TELEMETRY</td></tr>
+  <tr><td style="color:#ff9e64; padding:3px 0;">nanites</td><td style="color:#c0caf5;">Biomechanical swarm diagnostics &amp; core reaction state</td></tr>
+  <tr><td style="color:#ff9e64; padding:3px 0;">gears</td><td style="color:#c0caf5;">Mechanical spur gear ratios &amp; drive train telemetry</td></tr>
+  <tr><td style="color:#ff9e64; padding:3px 0;">builds</td><td style="color:#c0caf5;">Generator Rex construct roster (Slam Cannon, Smack Hands)</td></tr>
+
+  <tr style="border-bottom:1px solid rgba(125,207,255,0.2);"><td colspan="2" style="color:#bb9af7; padding:8px 0 4px; font-weight:600;">[3] ARCHIVES &amp; INDEX</td></tr>
+  <tr><td style="color:#ff9e64; padding:3px 0;">projects</td><td style="color:#c0caf5;">Repository index &amp; security tooling builds</td></tr>
+  <tr><td style="color:#ff9e64; padding:3px 0;">certs</td><td style="color:#c0caf5;">Earned credentials &amp; in-progress study paths</td></tr>
+  <tr><td style="color:#ff9e64; padding:3px 0;">blogs</td><td style="color:#c0caf5;">Medium publications &amp; technical writeups</td></tr>
+
+  <tr style="border-bottom:1px solid rgba(125,207,255,0.2);"><td colspan="2" style="color:#bb9af7; padding:8px 0 4px; font-weight:600;">[4] SYSTEM CONTROLS</td></tr>
+  <tr><td style="color:#ff9e64; padding:3px 0;">clear</td><td style="color:#c0caf5;">Reset viewport buffer</td></tr>
+  <tr><td style="color:#ff9e64; padding:3px 0;">exit</td><td style="color:#c0caf5;">Disengage terminal session</td></tr>
+</table>
 `,
     whoami: () => `
-<span style="color:#ff9e64">Akiless (@wajdi-cpu) // OPERATOR</span>
-------------------------------------------------------
-* Cybersecurity Student: ISET Mahdia (RSI 2.1)
-* Field: Offensive Security, Adversary Emulation & Red Teaming
-* Active Role: Summer Internship on an Enterprise Red Team
-* Core Specialization: Cloud Penetration Testing & Binary Reverse Engineering
+<div style="color:#ff9e64; font-weight:700;">// OPERATOR IDENTIFIER: Akiless (@wajdi-cpu)</div>
+<div style="color:#565f89;">----------------------------------------------------------------</div>
+<div><span style="color:#7dcfff;">Academic:</span>   ISET Mahdia (RSI 2.1) &mdash; Network Systems &amp; Cybersecurity</div>
+<div><span style="color:#7dcfff;">Focus:</span>      Offensive Security, Cloud Pentesting, Adversary Emulation</div>
+<div><span style="color:#7dcfff;">Internship:</span> Red Team Intern (Enterprise Adversary Simulation)</div>
+<div><span style="color:#7dcfff;">Research:</span>   Low-Level Reverse Engineering &amp; Binary Exploitation</div>
 `,
     nanites: () => `
-<span style="color:#7dcfff">[NANITE SWARM TELEMETRY]</span>
-* Nanite Density:      100% [Nominal]
-* Micro-Rotor RPM:     14,200 RPM
-* Core Reaction:       Overdrive Orange (#ff9e64) & Tokyo Cyan (#7dcfff)
-* Directive:           Autonomous Vulnerability Enumeration & Exploitation
+<div style="color:#7dcfff; font-weight:700;">// NANITE SWARM TELEMETRY &mdash; PROVIDENCE SUITE</div>
+<div>* Nanite Density:      100% [Nominal Swarm Active]</div>
+<div>* Micro-Rotor RPM:     14,200 RPM Synchronous</div>
+<div>* Carapace Architecture: Hexagonal Biomechanical Hull (4 Articulated Limbs)</div>
+<div>* Core Reaction:       Overdrive Amber (#ff9e64) &amp; Tokyo Cyan (#7dcfff)</div>
+<div>* Directive:           Autonomous Vulnerability Enumeration &amp; Exploitation</div>
 `,
     gears: () => `
-<span style="color:#7dcfff">[MECHANICAL GEAR TRAIN]</span>
-* Gear Cluster A:      20T / 12T / 8T Meshed Ratio [1:2.5]
-* Gear Cluster B:      24T / 14T Heavy Piston Drive [1:1.7]
-* Involute Profile:    Active & Synchronized
-* Construct Drive:     Hydraulic & Nanite Coupled
+<div style="color:#7dcfff; font-weight:700;">// MECHANICAL GEAR TRAIN TELEMETRY</div>
+<div>* Cluster A (Top-Right): 20T / 12T / 8T Involute Spur Train [Ratio 1:2.5]</div>
+<div>* Cluster B (Bottom-Left): 24T / 14T Heavy Piston Drive [Ratio 1:1.7]</div>
+<div>* Profile Standard:    Full-depth involute teeth with lightening spoke windows</div>
+<div>* Coupling:            Hydraulic &amp; Nanite Coupled Drive</div>
 `,
     builds: () => `
-<span style="color:#ff9e64">[GENERATOR REX MECHANICAL CONSTRUCTS]</span>
-* Smack Hands:         Heavy mechanical fists for brute-forcing defenses
-* Slam Cannon:         High-velocity rock launcher with side gear flywheels
-* Boogie Pack:         Twin jet turbine wings for rapid reconnaissance
-* BFS (Big Fat Sword): High-frequency tactical cutting blade
-* Punk Busters:        Piston-powered jump boots for perimeter breach
+<div style="color:#ff9e64; font-weight:700;">// GENERATOR REX MECHANICAL CONSTRUCT ROSTER</div>
+<div>* <span style="color:#7dcfff;">Smack Hands:</span>  Heavy pneumatic fists for brute-forcing perimeter defenses</div>
+<div>* <span style="color:#7dcfff;">Slam Cannon:</span>  High-velocity kinetic launcher with lateral gear flywheels</div>
+<div>* <span style="color:#7dcfff;">Boogie Pack:</span>  Twin jet turbine wings for reconnaissance &amp; rapid pivoting</div>
+<div>* <span style="color:#7dcfff;">BFS Blade:</span>    High-frequency tactical cutting blade for binary segmentation</div>
+<div>* <span style="color:#7dcfff;">Punk Busters:</span> Piston-powered jump boots for deep network penetration</div>
 `,
     skills: () => `
-<span style="color:#7dcfff">[OFFENSIVE SECURITY COMPETENCIES]</span>
-* Red Teaming, Kerberoasting, Active Directory
-* Cloud Infrastructure Auditing (AWS / Azure)
-* Low-Level Debugging & x86/ARM Reverse Engineering (Ghidra, GDB)
-* Embedded Systems & Linux OS Internals
-* Languages: Go, Python, C, Bash
+<div style="color:#7dcfff; font-weight:700;">// OFFENSIVE SECURITY COMPETENCIES</div>
+<div>* Active Directory Attacks (Kerberoasting, DCSync, BloodHound)</div>
+<div>* Cloud Infrastructure Auditing &amp; IAM Assessment (AWS / Azure)</div>
+<div>* Binary Reverse Engineering (Ghidra, GDB, x86_64, ARM)</div>
+<div>* Network Reconnaissance &amp; Web Vulnerability Research (Burp Suite, Wireshark)</div>
+<div>* Automation &amp; Exploit Dev: Python, Go, C, Bash</div>
 `,
     projects: () => `
-<span style="color:#7dcfff">[PROJECT REPOSITORIES]</span>
-Inspect GitHub projects in the <a href="projects.html" style="color:#ff9e64; text-decoration:underline;">~/projects</a> tab.
+<div style="color:#7dcfff;">// PROJECT ARCHIVES</div>
+<div>Direct link to technical tooling: <a href="projects.html" style="color:#ff9e64; text-decoration:underline;">projects.html</a></div>
 `,
     certs: () => `
-<span style="color:#7dcfff">[CERTIFICATIONS]</span>
-Track earned credentials and in-progress tracks in the <a href="certifications.html" style="color:#ff9e64; text-decoration:underline;">~/certifications</a> tab.
+<div style="color:#7dcfff;">// CREDENTIAL VERIFICATION</div>
+<div>Direct link to certification tracks: <a href="certifications.html" style="color:#ff9e64; text-decoration:underline;">certifications.html</a></div>
 `,
     blogs: () => `
-<span style="color:#7dcfff">[MEDIUM WRITEUPS]</span>
-Read technical publications in the <a href="blogs.html" style="color:#ff9e64; text-decoration:underline;">~/blogs</a> tab.
+<div style="color:#7dcfff;">// MEDIUM PUBLICATIONS</div>
+<div>Direct link to security writeups: <a href="blogs.html" style="color:#ff9e64; text-decoration:underline;">blogs.html</a></div>
 `,
     contact: () => `
-<span style="color:#7dcfff">[COMMUNICATION CHANNELS]</span>
-* GitHub:   <a href="https://github.com/wajdi-cpu" target="_blank" style="color:#ff9e64;">https://github.com/wajdi-cpu</a>
-* HTB:      <a href="https://app.hackthebox.com/profile" target="_blank" style="color:#ff9e64;">Hack The Box Profile</a>
-* LinkedIn: <a href="https://linkedin.com" target="_blank" style="color:#ff9e64;">LinkedIn Profile</a>
+<div style="color:#7dcfff; font-weight:700;">// RELAY CHANNELS</div>
+<div>* GitHub:   <a href="https://github.com/wajdi-cpu" target="_blank" style="color:#ff9e64;">https://github.com/wajdi-cpu</a></div>
+<div>* LinkedIn: <a href="https://linkedin.com" target="_blank" style="color:#ff9e64;">LinkedIn Profile</a></div>
+<div>* HTB:      <a href="https://app.hackthebox.com/profile" target="_blank" style="color:#ff9e64;">Hack The Box Profile</a></div>
 `,
     clear: () => {
       terminalOutput.innerHTML = '';
@@ -600,40 +660,76 @@ Read technical publications in the <a href="blogs.html" style="color:#ff9e64; te
     },
     exit: () => {
       closeTerminal();
-      return 'Disengaging terminal session...';
+      return '<span style="color:#565f89;">Session disengaged.</span>';
     }
   };
 
-  terminalInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      const rawCmd = terminalInput.value.trim();
-      const cmd = rawCmd.toLowerCase();
-      terminalInput.value = '';
+  // Execute Command Helper
+  const executeCommand = (rawCmd) => {
+    const cmd = rawCmd.trim().toLowerCase();
+    if (!cmd) return;
 
-      if (!cmd) return;
+    // Push to history
+    commandHistory.push(rawCmd.trim());
+    historyIndex = commandHistory.length;
 
-      const cmdLine = document.createElement('div');
-      cmdLine.className = 'terminal-line';
-      cmdLine.innerHTML = `<span style="color:#ff9e64;">akiless@nanite-os:~$</span> <span style="color:#fff;">${rawCmd}</span>`;
-      terminalOutput.appendChild(cmdLine);
+    const cmdLine = document.createElement('div');
+    cmdLine.className = 'terminal-line';
+    cmdLine.innerHTML = `<span style="color:#ff9e64;">akiless@nanite-os:~$</span> <span style="color:#fff;">${rawCmd}</span>`;
+    terminalOutput.appendChild(cmdLine);
 
-      const respLine = document.createElement('div');
-      respLine.className = 'terminal-line';
+    const respLine = document.createElement('div');
+    respLine.className = 'terminal-line';
 
-      if (commands[cmd]) {
-        const out = commands[cmd]();
-        if (out) {
-          respLine.innerHTML = out;
-          terminalOutput.appendChild(respLine);
-        }
-      } else {
-        respLine.innerHTML = `<span style="color:#f7768e;">rex-sh: command not recognized: '${rawCmd}'. Type <span style="color:#7dcfff;">help</span> for available commands.</span>`;
+    if (commands[cmd]) {
+      const out = commands[cmd]();
+      if (out) {
+        respLine.innerHTML = out;
         terminalOutput.appendChild(respLine);
       }
-
-      const body = modal.querySelector('.terminal-body');
-      if (body) body.scrollTop = body.scrollHeight;
+    } else {
+      respLine.innerHTML = `<span style="color:#f7768e;">rex-sh: command '${rawCmd}' not recognized. Type <span style="color:#7dcfff;">help</span> for command directory.</span>`;
+      terminalOutput.appendChild(respLine);
     }
+
+    const body = modal.querySelector('.terminal-body');
+    if (body) body.scrollTop = body.scrollHeight;
+  };
+
+  // Keyboard Event (Enter, Up, Down for history)
+  terminalInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const rawCmd = terminalInput.value;
+      terminalInput.value = '';
+      executeCommand(rawCmd);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (historyIndex > 0) {
+        historyIndex--;
+        terminalInput.value = commandHistory[historyIndex];
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIndex < commandHistory.length - 1) {
+        historyIndex++;
+        terminalInput.value = commandHistory[historyIndex];
+      } else {
+        historyIndex = commandHistory.length;
+        terminalInput.value = '';
+      }
+    }
+  });
+
+  // Attach quick action toolbar chips if present
+  const quickChips = modal.querySelectorAll('.terminal-chip');
+  quickChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const cmd = chip.getAttribute('data-cmd');
+      if (cmd) {
+        executeCommand(cmd);
+        terminalInput.focus();
+      }
+    });
   });
 }
 

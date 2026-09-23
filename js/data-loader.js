@@ -1,6 +1,7 @@
 /**
  * data-loader.js - Data fetching & rendering logic for Akiless Portfolio
- * Checks for React CDN components first; gracefully uses native renderer if React is absent.
+ * Tokyo Night Design System // Generator Rex Cyber Engine
+ * Renders activity feeds, projects grid, certification tracks, and writeups.
  */
 
 const DataLoader = {
@@ -27,10 +28,15 @@ const DataLoader = {
     }
   },
 
-  createEmptyState(title, description, icon = '📂') {
+  createEmptyState(title, description) {
     return `
       <div class="empty-state">
-        <div class="empty-state-icon">${icon}</div>
+        <div class="empty-state-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/>
+            <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
+          </svg>
+        </div>
         <h3 class="empty-state-title">${title}</h3>
         <p class="empty-state-desc">${description}</p>
       </div>
@@ -38,13 +44,13 @@ const DataLoader = {
   },
 
   // ==========================================
-  // PAGE 1: LATEST / INDEX TIMELINE
+  // PAGE 1: LATEST / INDEX TIMELINE (Beylessen Style Stream)
   // ==========================================
   async initTimeline(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
-    container.innerHTML = `<div style="text-align:center; padding: 3rem; color: var(--text-muted); font-family: var(--font-mono);">[Loading timeline activity feed...]</div>`;
+    container.innerHTML = `<div style="text-align:center; padding: 3rem; color: var(--text-muted); font-family: var(--font-mono);">[Loading activity stream...]</div>`;
 
     const [blogs, certs, projects] = await Promise.all([
       this.fetchJSON('./data/blogs.json'),
@@ -57,41 +63,41 @@ const DataLoader = {
     blogs.forEach(b => {
       items.push({
         type: 'writeup',
+        category: 'Writeup',
         title: b.title,
         date: b.date || '',
         description: b.description || '',
-        url: b.url || '#',
+        url: b.url || 'blogs.html',
         image: b.image || '',
-        meta: 'Medium Writeup',
-        badgeClass: 'badge-blog'
+        tags: b.tags || ['Writeup', 'HackTheBox', 'Red-Team']
       });
     });
 
     certs.forEach(c => {
       items.push({
         type: 'cert',
-        title: `${c.name} (${c.issuer || 'Certification'})`,
+        category: 'Certification',
+        title: `${c.name} (${c.issuer || 'Verification'})`,
         date: c.dateEarned || '',
         description: c.status === 'earned'
-          ? `Successfully earned credential from ${c.issuer}.`
-          : `Currently preparing for examination (${c.percent || 0}% completed).`,
+          ? `Earned certification milestone verified by ${c.issuer}.`
+          : `Actively pursuing target credential (${c.percent || 0}% syllabus completed).`,
         url: 'certifications.html',
         image: c.image || '',
-        meta: c.status === 'earned' ? 'Credential Earned' : 'Certification In Progress',
-        badgeClass: 'badge-cert'
+        tags: ['Credential', c.issuer || 'OffSec', c.status === 'earned' ? 'Earned' : 'In-Progress']
       });
     });
 
     projects.forEach(p => {
       items.push({
         type: 'project',
+        category: 'Project',
         title: p.name,
         date: '',
         description: p.description || '',
         url: p.url || 'projects.html',
         image: p.image || '',
-        meta: (p.tags && p.tags.length) ? p.tags.slice(0, 3).join(', ') : 'Project',
-        badgeClass: 'badge-project'
+        tags: (p.tags && p.tags.length) ? p.tags : ['Security Tooling', 'GitHub', 'Research']
       });
     });
 
@@ -102,32 +108,25 @@ const DataLoader = {
       return new Date(b.date) - new Date(a.date);
     });
 
-    // Check if React component is present
-    if (window.AkilessReact && window.AkilessReact.mountTimeline) {
-      window.AkilessReact.mountTimeline(containerId, {
-        items,
-        blogsCount: blogs.length,
-        certsCount: certs.length,
-        projectsCount: projects.length
-      });
-      return;
-    }
-
-    // Native Vanilla JS Renderer Fallback
+    // Check if empty
     if (items.length === 0) {
-      container.innerHTML = this.createEmptyState(
-        'No Activity Yet',
-        'No blog posts, certifications, or projects have been added yet. Stay tuned for upcoming writeups and tool releases!',
-        '⚡'
-      );
+      container.innerHTML = `
+        <div class="stream-empty">
+          <div class="stream-empty-symbol">// NULL_STREAM_FEED</div>
+          <h3 style="color:#fff; font-size:1.15rem; margin:0.8rem 0 0.4rem; font-weight:600;">No Recent Activity Recorded</h3>
+          <p style="color:var(--text-muted); font-size:0.9rem; max-width:480px; margin:0 auto; line-height:1.6;">
+            No published writeups, certifications, or project repos found in telemetry database. New cybersecurity research and tool releases will automatically stream here.
+          </p>
+        </div>
+      `;
       return;
     }
 
     let currentFilter = 'all';
 
     const render = () => {
-      const filtered = currentFilter === 'all' 
-        ? items 
+      const filtered = currentFilter === 'all'
+        ? items
         : items.filter(it => it.type === currentFilter);
 
       const filterHtml = `
@@ -141,46 +140,45 @@ const DataLoader = {
 
       if (filtered.length === 0) {
         container.innerHTML = filterHtml + this.createEmptyState(
-          `No ${currentFilter} entries found`,
-          'Try selecting another filter category.'
+          `No ${currentFilter} records`,
+          'Try selecting another category filter above.'
         );
         attachFilterEvents();
         return;
       }
 
-      const timelineItemsHtml = filtered.map(item => `
-        <div class="timeline-item">
-          <div class="timeline-dot"></div>
-          <div class="timeline-card">
-            <img class="timeline-thumb" 
-                 src="${this.resolvePath(item.image)}" 
-                 alt="${item.title}" 
-                 loading="lazy" 
-                 onerror="window.handleImageError(this)">
-            <div class="timeline-content">
-              <div class="timeline-meta">
-                <span class="timeline-badge ${item.badgeClass}">${item.type.toUpperCase()}</span>
-                ${item.date ? `<span class="timeline-date">${item.date}</span>` : ''}
-              </div>
-              <h3 class="timeline-title">
-                <a href="${item.url}" ${item.url.startsWith('http') ? 'target="_blank" rel="noopener noreferrer"' : ''}>
-                  ${item.title}
-                </a>
-              </h3>
-              <p class="timeline-desc">${item.description}</p>
-            </div>
+      // Beylessen-style list cards
+      const postCardsHtml = filtered.map(item => `
+        <article class="post-card">
+          <div class="post-meta">
+            <span class="post-category">${item.category}</span>
+            ${item.date ? `<time class="post-date">${item.date}</time>` : ''}
           </div>
-        </div>
+          <h3 class="post-title">
+            <a href="${item.url}" ${item.url.startsWith('http') ? 'target="_blank" rel="noopener noreferrer"' : ''}>
+              ${item.title}
+            </a>
+          </h3>
+          <p class="post-excerpt">${item.description}</p>
+          <div class="post-footer">
+            <div class="post-tags">
+              ${(item.tags || []).map(t => `<span class="post-tag">#${t}</span>`).join('')}
+            </div>
+            <a class="read-more" href="${item.url}" ${item.url.startsWith('http') ? 'target="_blank" rel="noopener noreferrer"' : ''}>
+              Read More &rarr;
+            </a>
+          </div>
+        </article>
       `).join('');
 
-      container.innerHTML = filterHtml + `<div class="timeline-container">${timelineItemsHtml}</div>`;
+      container.innerHTML = filterHtml + `<div class="post-stream-list">${postCardsHtml}</div>`;
       attachFilterEvents();
     };
 
     const attachFilterEvents = () => {
       container.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-          currentFilter = e.target.getAttribute('data-filter');
+          currentFilter = e.currentTarget.getAttribute('data-filter');
           render();
         });
       });
@@ -200,17 +198,10 @@ const DataLoader = {
 
     const projects = await this.fetchJSON('./data/projects.json');
 
-    // Check if React component is present
-    if (window.AkilessReact && window.AkilessReact.mountProjects) {
-      window.AkilessReact.mountProjects(containerId, projects);
-      return;
-    }
-
     if (!projects || projects.length === 0) {
       container.innerHTML = this.createEmptyState(
-        'No Projects Yet',
-        'No repositories or projects listed yet. Check back soon for security tooling and research!',
-        '🛠️'
+        'No Projects Recorded Yet',
+        'Security tools, exploit scripts, and GitHub repositories will appear here once published.'
       );
       return;
     }
@@ -239,7 +230,7 @@ const DataLoader = {
       `;
 
       if (filtered.length === 0) {
-        container.innerHTML = tagsHtml + this.createEmptyState('No matching projects', 'No projects found with the selected tag.');
+        container.innerHTML = tagsHtml + this.createEmptyState('No matching projects', 'No repositories found with the selected tag filter.');
         attachTagEvents();
         return;
       }
@@ -279,7 +270,7 @@ const DataLoader = {
     const attachTagEvents = () => {
       container.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-          activeTag = e.target.getAttribute('data-tag');
+          activeTag = e.currentTarget.getAttribute('data-tag');
           render();
         });
       });
@@ -299,12 +290,6 @@ const DataLoader = {
 
     const certs = await this.fetchJSON('./data/certs.json');
 
-    // Check if React component is present
-    if (window.AkilessReact && window.AkilessReact.mountCertifications) {
-      window.AkilessReact.mountCertifications(containerId, certs);
-      return;
-    }
-
     const earned = certs.filter(c => c.status === 'earned');
     const inProgress = certs.filter(c => c.status === 'in-progress');
 
@@ -321,9 +306,8 @@ const DataLoader = {
 
     if (earned.length === 0) {
       html += this.createEmptyState(
-        'No Certifications Listed Yet',
-        'Completed certifications will appear here once verified.',
-        '🎓'
+        'No Completed Credentials Yet',
+        'Verified certifications and badges will appear here.'
       );
     } else {
       html += `
@@ -339,7 +323,7 @@ const DataLoader = {
                 <div class="cert-info">
                   <h3 class="cert-name">${c.name}</h3>
                   <div class="cert-issuer">${c.issuer || 'Issuing Body'}</div>
-                  ${c.dateEarned ? `<div class="cert-date">✓ Earned: ${c.dateEarned}</div>` : ''}
+                  ${c.dateEarned ? `<div class="cert-date">Verified: ${c.dateEarned}</div>` : ''}
                 </div>
               </div>
             </div>
@@ -360,9 +344,8 @@ const DataLoader = {
 
     if (inProgress.length === 0) {
       html += this.createEmptyState(
-        'No In-Progress Certifications',
-        'Currently not enrolled in any pending certification tracks.',
-        '⏳'
+        'No Active Tracks Pending',
+        'Currently not enrolled in any pending examination tracks.'
       );
     } else {
       html += `
@@ -415,9 +398,8 @@ const DataLoader = {
 
     if (!blogs || blogs.length === 0) {
       container.innerHTML = this.createEmptyState(
-        'No Posts Yet — Check Back Soon',
-        'Security writeups, CTF breakdowns, and research articles will be published here.',
-        '📝'
+        'No Publications Recorded Yet',
+        'Offensive security writeups, CTF solutions, and Medium publications will be listed here.'
       );
       return;
     }
