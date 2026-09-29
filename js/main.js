@@ -475,8 +475,9 @@ function initMechanicalTypewriter() {
   if (!el) return;
 
   const phrases = [
-    'NANITES: ONLINE // ISET Mahdia (RSI 2.1)',
-    'MECHANICAL CONSTRUCT: Red Team Operator',
+    'NANITES: ONLINE // Digging below the abstraction layer',
+    'MECHANICAL CONSTRUCT : Red Team Operator',
+    'WEB RECON : Finding XSS',
     'EXPLOIT RESEARCH // Cloud Penetration Testing',
     'REVERSE ENGINEERING // System Internals & Low-Level'
   ];
