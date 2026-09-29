@@ -108,15 +108,18 @@ const DataLoader = {
       return new Date(b.date) - new Date(a.date);
     });
 
-    // Check if empty
+    // Keep the content destinations visible when the feed has no entries yet.
     if (items.length === 0) {
       container.innerHTML = `
         <div class="stream-empty">
           <div class="stream-empty-symbol">// NULL_STREAM_FEED</div>
-          <h3 style="color:#fff; font-size:1.15rem; margin:0.8rem 0 0.4rem; font-weight:600;">No Recent Activity Recorded</h3>
-          <p style="color:var(--text-muted); font-size:0.9rem; max-width:480px; margin:0 auto; line-height:1.6;">
-            No published writeups, certifications, or project repos found in telemetry database. New cybersecurity research and tool releases will automatically stream here.
-          </p>
+          <h3 class="stream-empty-title">Nothing published here yet</h3>
+          <p class="stream-empty-copy">New writeups, certification updates, and projects will appear in this feed. Choose a section to explore in the meantime.</p>
+          <nav class="stream-empty-actions" aria-label="Portfolio sections">
+            <a href="blogs.html">Browse writeups <span>&rarr;</span></a>
+            <a href="projects.html">View projects <span>&rarr;</span></a>
+            <a href="certifications.html">See certifications <span>&rarr;</span></a>
+          </nav>
         </div>
       `;
       return;

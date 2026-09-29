@@ -35,6 +35,7 @@
 
   <!-- Floating Glass Dock -->
   <nav class="glass-dock" aria-label="Main Navigation">
+    <a href="index.html" class="nav-brand" aria-label="Akiless home"><span>λ</span> akiless</a>
     <a href="index.html" class="dock-item" title="Latest Activity">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
       <span class="dock-tooltip">~/latest</span>
@@ -129,9 +130,10 @@
           Welcome to my digital workspace and technical writeup hub.
         </p>
         <div class="hero-actions">
-          <a href="whoami.html" class="btn-cyber primary">
-            Explore whoami &rarr;
+          <a href="blogs.html" class="btn-cyber primary">
+            Browse writeups &rarr;
           </a>
+          <a href="whoami.html" class="btn-cyber secondary">About me</a>
           <button class="btn-cyber secondary terminal-trigger">
             Launch Terminal &gt;_
           </button>
@@ -162,7 +164,22 @@
         </div>
       </div>
     </header>
-    <div class="blog-layout">
+    <section class="overview-stats" aria-label="Portfolio overview">
+      <a class="overview-stat" href="blogs.html">
+        <span class="overview-stat-value" id="overview-post-count">0</span>
+        <span class="overview-stat-label">Writeups</span>
+      </a>
+      <a class="overview-stat" href="certifications.html">
+        <span class="overview-stat-value" id="overview-cert-count">0</span>
+        <span class="overview-stat-label">Certifications</span>
+      </a>
+      <a class="overview-stat" href="projects.html">
+        <span class="overview-stat-value" id="overview-project-count">0</span>
+        <span class="overview-stat-label">Projects</span>
+      </a>
+    </section>
+
+    <div class="blog-layout blog-layout-single">
 
       <!-- LEFT COLUMN: Activity Stream Feed -->
       <main class="stream-main">
@@ -201,32 +218,27 @@
               </div>
               <div class="sidebar-author-name">AkilesTheDark</div>
               <div class="sidebar-author-sub">wajdi-cpu // Red Team</div>
-            </div>
-          </div>
-          <!-- Quantitative Stats Counter -->
-          <div class="sidebar-stats">
-            <div class="stat-cell">
-              <span class="stat-number" id="sidebar-post-count">0</span>
-              <span class="stat-label">Posts</span>
-            </div>
-            <div class="stat-cell">
-              <a href="certifications.html" style="text-decoration:none; display:block;">
-                <span class="stat-number" id="sidebar-cert-count">0</span>
-                <span class="stat-label">Certs</span>
-              </a>
-            </div>
-            <div class="stat-cell">
-              <a href="projects.html" style="text-decoration:none; display:block;">
-                <span class="stat-number" id="sidebar-project-count">0</span>
-                <span class="stat-label">Projects</span>
-              </a>
+              <p class="sidebar-author-bio">Web security, red teaming, CTFs, and reverse engineering.</p>
+              <a class="sidebar-about-link" href="whoami.html">Read my profile &rarr;</a>
             </div>
           </div>
         </div>
 
-        <!-- 2. Social Relays (Clean SVG Links) -->
+        <!-- Quick access to the site's main sections -->
         <div class="sidebar-card">
-          <div class="sidebar-card-header">// Communication Relays</div>
+          <div class="sidebar-card-header">// Explore</div>
+          <div class="sidebar-card-body">
+            <nav class="sidebar-socials" aria-label="Explore portfolio">
+              <a href="blogs.html" class="sidebar-social-link">Writeups <span>Articles &amp; CTF notes</span></a>
+              <a href="projects.html" class="sidebar-social-link">Projects <span>Tools &amp; experiments</span></a>
+              <a href="certifications.html" class="sidebar-social-link">Certifications <span>Earned &amp; in progress</span></a>
+              <a href="whoami.html" class="sidebar-social-link">About <span>Profile &amp; skills</span></a>
+            </nav>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-card-header">// Contact &amp; Profiles</div>
           <div class="sidebar-card-body">
             <div class="sidebar-socials">
               <a href="https://github.com/wajdi-cpu" target="_blank" rel="noopener noreferrer" class="sidebar-social-link">
@@ -261,48 +273,17 @@
           </div>
         </div>
 
-        <!-- 3. Categories (Beylessen Style) -->
+        <!-- Areas of focus are labels, not placeholder links -->
         <div class="sidebar-card">
-          <div class="sidebar-card-header">// Categories</div>
-          <div class="sidebar-card-body">
-            <ul class="sidebar-categories">
-              <li>
-                <a href="blogs.html">Writeups</a>
-                <span class="cat-count" id="cat-writeups-count">&mdash;</span>
-              </li>
-              <li>
-                <a href="projects.html">Projects</a>
-                <span class="cat-count" id="cat-projects-count">&mdash;</span>
-              </li>
-              <li>
-                <a href="certifications.html">Certifications</a>
-                <span class="cat-count" id="cat-certs-count">&mdash;</span>
-              </li>
-              <li>
-                <a href="blogs.html">CTF &amp; Labs</a>
-                <span class="cat-count">&mdash;</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- 4. Tags Cloud (Beylessen Style) -->
-        <div class="sidebar-card">
-          <div class="sidebar-card-header">// Tags</div>
+          <div class="sidebar-card-header">// Focus Areas</div>
           <div class="sidebar-card-body">
             <div class="tags-cloud">
-              <a href="#">Red Teaming</a>
-              <a href="#">HackTheBox</a>
-              <a href="#">Cloud Pentest</a>
-              <a href="#">Reverse Engineering</a>
-              <a href="#">Ghidra</a>
-              <a href="#">Python</a>
-              <a href="#">Go</a>
-              <a href="#">Active Directory</a>
-              <a href="#">Kerberoasting</a>
-              <a href="#">Burp Suite</a>
-              <a href="#">CTF</a>
-              <a href="#">ISET Mahdia</a>
+              <span>Web Pentesting</span>
+              <span>Red Teaming</span>
+              <span>CTF &amp; Labs</span>
+              <span>Reverse Engineering</span>
+              <span>Active Directory</span>
+              <span>Cloud Security</span>
             </div>
           </div>
         </div>
@@ -335,19 +316,9 @@
             fetch('./data/certs.json').then(r => r.json()).catch(() => []),
             fetch('./data/projects.json').then(r => r.json()).catch(() => [])
           ]);
-          const postEl = document.getElementById('sidebar-post-count');
-          const certEl = document.getElementById('sidebar-cert-count');
-          const projEl = document.getElementById('sidebar-project-count');
-          const catWriteup = document.getElementById('cat-writeups-count');
-          const catProj = document.getElementById('cat-projects-count');
-          const catCert = document.getElementById('cat-certs-count');
-
-          if (postEl) postEl.textContent = blogs.length;
-          if (certEl) certEl.textContent = certs.length;
-          if (projEl) projEl.textContent = projects.length;
-          if (catWriteup) catWriteup.textContent = blogs.length;
-          if (catProj) catProj.textContent = projects.length;
-          if (catCert) catCert.textContent = certs.length;
+          document.getElementById('overview-post-count').textContent = blogs.length;
+          document.getElementById('overview-cert-count').textContent = certs.length;
+          document.getElementById('overview-project-count').textContent = projects.length;
         } catch(e) { /* keep default */ }
       })();
     });
