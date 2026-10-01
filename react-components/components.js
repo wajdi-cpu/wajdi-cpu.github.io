@@ -10,7 +10,7 @@
   } else if (typeof exports === 'object') {
     module.exports = factory(require('react'), require('react-dom'));
   } else {
-    root.AkilessReact = factory(root.React, root.ReactDOM);
+    root.AkilesTheDarkReact = factory(root.React, root.ReactDOM);
   }
 })(typeof self !== 'undefined' ? self : this, function (React, ReactDOM) {
   if (!React || !ReactDOM) {

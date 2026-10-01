@@ -1,16 +1,42 @@
 /**
- * data-loader.js - Data fetching & rendering logic for Akiless Portfolio
+ * data-loader.js - Data fetching & rendering logic for AkilesTheDark Portfolio
  * Tokyo Night Design System // Generator Rex Cyber Engine
  * Renders activity feeds, projects grid, certification tracks, and writeups.
  */
 
 const DataLoader = {
+  escapeHTML(value) {
+    return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    })[char]);
+  },
+
+  safeURL(value, fallback = '#') {
+    const candidate = String(value ?? '').trim();
+    if (!candidate || /[\u0000-\u001f\\]/.test(candidate)) return fallback;
+    try {
+      const parsed = new URL(candidate, window.location.href);
+      if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return fallback;
+      return candidate;
+    } catch {
+      return fallback;
+    }
+  },
+
   resolvePath(path) {
     if (!path) return './assets/placeholder.png';
-    if (path.startsWith('http://') || path.startsWith('https://')) return path;
-    if (path.startsWith('./')) return path;
-    if (path.startsWith('/')) return '.' + path;
-    return './' + path;
+    const candidate = String(path).trim();
+    if (/^[a-z][a-z\d+.-]*:/i.test(candidate) || candidate.startsWith('//')) {
+      return this.safeURL(candidate, './assets/placeholder.png');
+    }
+    if (/[\u0000-\u001f\\]/.test(candidate)) return './assets/placeholder.png';
+    if (candidate.startsWith('./')) return candidate;
+    if (candidate.startsWith('/')) return '.' + candidate;
+    return './' + candidate;
   },
 
   async fetchJSON(endpoint) {
@@ -37,8 +63,8 @@ const DataLoader = {
             <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>
           </svg>
         </div>
-        <h3 class="empty-state-title">${title}</h3>
-        <p class="empty-state-desc">${description}</p>
+        <h3 class="empty-state-title">${this.escapeHTML(title)}</h3>
+        <p class="empty-state-desc">${this.escapeHTML(description)}</p>
       </div>
     `;
   },
@@ -154,20 +180,20 @@ const DataLoader = {
       const postCardsHtml = filtered.map(item => `
         <article class="post-card">
           <div class="post-meta">
-            <span class="post-category">${item.category}</span>
-            ${item.date ? `<time class="post-date">${item.date}</time>` : ''}
+            <span class="post-category">${this.escapeHTML(item.category)}</span>
+            ${item.date ? `<time class="post-date">${this.escapeHTML(item.date)}</time>` : ''}
           </div>
           <h3 class="post-title">
-            <a href="${item.url}" ${item.url.startsWith('http') ? 'target="_blank" rel="noopener noreferrer"' : ''}>
-              ${item.title}
+            <a href="${this.escapeHTML(this.safeURL(item.url, 'blogs.html'))}" ${/^https?:\/\//i.test(item.url) ? 'target="_blank" rel="noopener noreferrer"' : ''}>
+              ${this.escapeHTML(item.title)}
             </a>
           </h3>
-          <p class="post-excerpt">${item.description}</p>
+          <p class="post-excerpt">${this.escapeHTML(item.description)}</p>
           <div class="post-footer">
             <div class="post-tags">
-              ${(item.tags || []).map(t => `<span class="post-tag">#${t}</span>`).join('')}
+              ${(Array.isArray(item.tags) ? item.tags : []).map(t => `<span class="post-tag">#${this.escapeHTML(t)}</span>`).join('')}
             </div>
-            <a class="read-more" href="${item.url}" ${item.url.startsWith('http') ? 'target="_blank" rel="noopener noreferrer"' : ''}>
+            <a class="read-more" href="${this.escapeHTML(this.safeURL(item.url, 'blogs.html'))}" ${/^https?:\/\//i.test(item.url) ? 'target="_blank" rel="noopener noreferrer"' : ''}>
               Read More &rarr;
             </a>
           </div>
@@ -227,7 +253,7 @@ const DataLoader = {
         <div class="filter-bar">
           <button class="filter-btn ${activeTag === 'all' ? 'active' : ''}" data-tag="all">All (${projects.length})</button>
           ${Array.from(allTags).map(tag => `
-            <button class="filter-btn ${activeTag === tag ? 'active' : ''}" data-tag="${tag}">${tag}</button>
+            <button class="filter-btn ${activeTag === tag ? 'active' : ''}" data-tag="${this.escapeHTML(tag)}">${this.escapeHTML(tag)}</button>
           `).join('')}
         </div>
       `;
@@ -243,20 +269,20 @@ const DataLoader = {
           ${filtered.map(proj => `
             <div class="project-card">
               <img class="project-cover" 
-                   src="${this.resolvePath(proj.image)}" 
-                   alt="${proj.name}" 
+                   src="${this.escapeHTML(this.resolvePath(proj.image))}" 
+                   alt="${this.escapeHTML(proj.name)}" 
                    loading="lazy" 
                    onerror="window.handleImageError(this)">
               <div class="project-body">
                 <h3 class="project-name">
-                  ${proj.name}
+                  ${this.escapeHTML(proj.name)}
                 </h3>
-                <p class="project-desc">${proj.description || 'No description provided.'}</p>
+                <p class="project-desc">${this.escapeHTML(proj.description || 'No description provided.')}</p>
                 <div class="project-tags">
-                  ${(proj.tags || []).map(t => `<span class="project-tag">${t}</span>`).join('')}
+                  ${(Array.isArray(proj.tags) ? proj.tags : []).map(t => `<span class="project-tag">${this.escapeHTML(t)}</span>`).join('')}
                 </div>
                 <div class="project-footer">
-                  <a href="${proj.url || '#'}" target="_blank" rel="noopener noreferrer">
+                  <a href="${this.escapeHTML(this.safeURL(proj.url, '#'))}" target="_blank" rel="noopener noreferrer">
                     View on GitHub &rarr;
                   </a>
                 </div>
@@ -319,14 +345,14 @@ const DataLoader = {
             <div class="cert-card">
               <div class="cert-card-top">
                 <img class="cert-badge-img" 
-                     src="${this.resolvePath(c.image)}" 
-                     alt="${c.name}" 
+                     src="${this.escapeHTML(this.resolvePath(c.image))}" 
+                     alt="${this.escapeHTML(c.name)}" 
                      loading="lazy" 
                      onerror="window.handleImageError(this)">
                 <div class="cert-info">
-                  <h3 class="cert-name">${c.name}</h3>
-                  <div class="cert-issuer">${c.issuer || 'Issuing Body'}</div>
-                  ${c.dateEarned ? `<div class="cert-date">Verified: ${c.dateEarned}</div>` : ''}
+                  <h3 class="cert-name">${this.escapeHTML(c.name)}</h3>
+                  <div class="cert-issuer">${this.escapeHTML(c.issuer || 'Issuing Body')}</div>
+                  ${c.dateEarned ? `<div class="cert-date">Verified: ${this.escapeHTML(c.dateEarned)}</div>` : ''}
                 </div>
               </div>
             </div>
@@ -359,13 +385,13 @@ const DataLoader = {
               <div class="cert-card">
                 <div class="cert-card-top">
                   <img class="cert-badge-img" 
-                       src="${this.resolvePath(c.image)}" 
-                       alt="${c.name}" 
+                       src="${this.escapeHTML(this.resolvePath(c.image))}" 
+                       alt="${this.escapeHTML(c.name)}" 
                        loading="lazy" 
                        onerror="window.handleImageError(this)">
                   <div class="cert-info">
-                    <h3 class="cert-name">${c.name}</h3>
-                    <div class="cert-issuer">${c.issuer || 'Target Credential'}</div>
+                    <h3 class="cert-name">${this.escapeHTML(c.name)}</h3>
+                    <div class="cert-issuer">${this.escapeHTML(c.issuer || 'Target Credential')}</div>
                   </div>
                 </div>
                 <div class="cert-progress-box">
@@ -413,21 +439,21 @@ const DataLoader = {
       <div class="blogs-list">
         ${blogs.map(post => `
           <article class="blog-card">
-            <img class="blog-thumb" 
-                 src="${this.resolvePath(post.image)}" 
-                 alt="${post.title}" 
+              <img class="blog-thumb" 
+                 src="${this.escapeHTML(this.resolvePath(post.image))}" 
+                 alt="${this.escapeHTML(post.title)}" 
                  loading="lazy" 
                  onerror="window.handleImageError(this)">
             <div class="blog-content">
-              ${post.date ? `<time class="blog-date">${post.date}</time>` : ''}
+              ${post.date ? `<time class="blog-date">${this.escapeHTML(post.date)}</time>` : ''}
               <h3 class="blog-title">
-                <a href="${post.url || '#'}" target="_blank" rel="noopener noreferrer">
-                  ${post.title}
+                <a href="${this.escapeHTML(this.safeURL(post.url, '#'))}" target="_blank" rel="noopener noreferrer">
+                  ${this.escapeHTML(post.title)}
                 </a>
               </h3>
-              <p class="blog-desc">${post.description || ''}</p>
+              <p class="blog-desc">${this.escapeHTML(post.description || '')}</p>
               <div>
-                <a class="blog-link" href="${post.url || '#'}" target="_blank" rel="noopener noreferrer">
+                <a class="blog-link" href="${this.escapeHTML(this.safeURL(post.url, '#'))}" target="_blank" rel="noopener noreferrer">
                   Read on Medium &rarr;
                 </a>
               </div>

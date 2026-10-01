@@ -3,14 +3,14 @@
     {
       "title": "Introduction to Active Directory Enumeration & Kerberoasting",
       "date": "2026-08-15",
-      "url": "https://medium.com/@akiless/intro-to-active-directory-kerberoasting",
+      "url": "https://medium.com/@AkilesTheDark/intro-to-active-directory-kerberoasting",
       "description": "A deep dive into extracting service ticket hashes from vulnerable Active Directory services using Impacket.",
       "image": "assets/blogs/kerberoasting.png"
     },
     {
       "title": "Reverse Engineering x86-64 Binaries with Ghidra & GDB",
       "date": "2026-07-22",
-      "url": "https://medium.com/@akiless/reverse-engineering-x86-64-ghidra",
+      "url": "https://medium.com/@AkilesTheDark/reverse-engineering-x86-64-ghidra",
       "description": "Deconstructing stack frames, calling conventions, and patching security checks in custom CTF binaries.",
       "image": "assets/blogs/ghidra-re.png"
     }

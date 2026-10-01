@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AkilesTheDark // Latest Activity</title>
-  <meta name="description" content="Akiless (wajdi-cpu) - Offensive Security Practitioner & Cybersecurity Student">
+  <meta name="description" content="AkilesTheDark (wajdi-cpu) - Offensive Security Practitioner & Cybersecurity Student">
   
   <!-- Favicon -->
   <link rel="icon" type="image/jpeg" href="./assets/favicon.jpg">
@@ -18,6 +18,18 @@
 </head>
 <body>
 
+  <!-- Brief system boot intro shown on the home page -->
+  <section id="boot-screen" class="boot-screen" role="status" aria-live="polite" aria-label="Starting AkilesTheDark profile">
+    <div class="boot-console">
+      <div class="boot-console-title"><span class="boot-led"></span> AKILESTHEDARK // SECURE SESSION</div>
+      <p class="boot-line"><span class="boot-tag">[SYS]</span> Initializing secure shell... <strong>OK</strong></p>
+      <p class="boot-line"><span class="boot-tag">[AUTH]</span> Verifying operator credentials... <strong>GRANTED</strong></p>
+      <p class="boot-line"><span class="boot-tag">[LOAD]</span> Loading profile: <strong>AkilesTheDark</strong> / access: <strong>ROOT</strong></p>
+      <p class="boot-line"><span class="boot-tag">[INIT]</span> Welcome to the system. Stay quiet. <span class="boot-cursor">▋</span></p>
+      <div class="boot-console-footer">SYSTEM ONLINE // RED TEAM PROFILE</div>
+    </div>
+  </section>
+
   <!-- Interactive Background Canvas & Ambient Orbs -->
   <canvas id="bg-canvas"></canvas>
   <div class="bg-glow-orb orb-1"></div>
@@ -26,21 +38,21 @@
   <!-- Mobile Top Bar -->
   <div class="mobile-top-bar">
     <a href="index.html" class="mobile-brand">
-      <span>λ</span> akiless
+      <span>λ</span> AkilesTheDark
     </a>
-    <button class="terminal-trigger" style="background:none; border:none; color:var(--accent-orange); font-family:var(--font-mono); font-size:1.1rem; cursor:pointer;" title="Launch Terminal">
+    <button class="terminal-trigger" style="background:none; border:none; color:var(--accent-gold); font-family:var(--font-mono); font-size:1.1rem; cursor:pointer;" title="Launch Terminal">
       &gt;_
     </button>
   </div>
 
   <!-- Floating Glass Dock -->
   <nav class="glass-dock" aria-label="Main Navigation">
-    <a href="index.html" class="nav-brand" aria-label="Akiless home"><span>λ</span> akiless</a>
+    <a href="index.html" class="nav-brand" aria-label="AkilesTheDark home"><span>λ</span> AkilesTheDark</a>
     <a href="index.html" class="dock-item" title="Latest Activity">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
       <span class="dock-tooltip">~/latest</span>
     </a>
-    <a href="whoami.html" class="dock-item" title="About Akiless">
+    <a href="whoami.html" class="dock-item" title="About AkilesTheDark">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span class="dock-tooltip">~/whoami</span>
     </a>
@@ -79,32 +91,18 @@
           <span class="control-dot dot-yellow"></span>
           <span class="control-dot dot-green"></span>
         </div>
-        <span class="terminal-title">AkilesTheDark@nanite-os: ~ (rex-zsh)</span>
-        <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--accent-cyan);">STATUS: ONLINE</div>
-      </div>
-
-      <!-- Quick Action Toolbar for Organized Terminal UX -->
-      <div class="terminal-toolbar">
-        <button class="terminal-chip" data-cmd="whoami">whoami</button>
-        <button class="terminal-chip" data-cmd="nanites">nanites</button>
-        <button class="terminal-chip" data-cmd="gears">gears</button>
-        <button class="terminal-chip" data-cmd="builds">builds</button>
-        <button class="terminal-chip" data-cmd="skills">skills</button>
-        <button class="terminal-chip cyan" data-cmd="projects">projects</button>
-        <button class="terminal-chip cyan" data-cmd="certs">certs</button>
-        <button class="terminal-chip cyan" data-cmd="blogs">blogs</button>
-        <button class="terminal-chip" data-cmd="help">help</button>
-        <button class="terminal-chip" data-cmd="clear" style="border-color:#f7768e; color:#f7768e;">clear</button>
+        <span class="terminal-title">AkilesTheDark@nanite-os: ~ (bash)</span>
+        <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--accent-red);">STATUS: ONLINE</div>
       </div>
 
       <div class="terminal-body">
         <div id="terminal-output" class="terminal-output">
-          <div class="terminal-line"><span style="color:#7dcfff;">// PROVIDENCE NANITE OS [Version 3.2.0-STABLE]</span></div>
-          <div class="terminal-line"><span style="color:#565f89;">Interactive diagnostics &amp; profile relay active. Click any quick command above or type <span style="color:#ff9e64;">help</span>.</span></div>
+          <div class="terminal-line"><span style="color:#ff5964;">Providence Shell 3.2 // session opened for AkilesTheDark</span></div>
+          <div class="terminal-line"><span style="color:#8c777d;">Virtual Linux environment ready. Type <span style="color:#f6c453;">help</span> to see commands, pipes, redirects, and shortcuts.</span></div>
         </div>
         <div class="terminal-prompt-row">
-          <span class="terminal-prompt-user">AkilesTheDark@nanite-os:~$</span>
-          <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" placeholder="type a command...">
+          <span id="terminal-prompt-label" class="terminal-prompt-user">AkilesTheDark@nanite-os:~$</span>
+          <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" aria-label="Terminal command" placeholder="try help, ls -lah, or cat README.md | grep security">
         </div>
       </div>
     </div>
@@ -114,10 +112,19 @@
   <div class="page-container">
     <!-- Hero Banner -->
     <header class="hero-section">
+      <div class="hero-avatar-col">
+        <div class="avatar-portrait-wrapper">
+          <img class="avatar-image-inner" 
+               src="./assets/avatar.png" 
+               alt="AkilesTheDark" 
+               onerror="window.handleImageError(this)">
+        </div>
+      </div>
+
       <div class="hero-text-col">
-        <div class="hero-status-pill">
+        <div class="hero-status-pill overdrive-toggle-btn" title="Click to Surge Nanite Overdrive Mode">
           <span class="pulse-dot"></span>
-          <span>NANITES: ONLINE &bull; RED TEAMER </span>
+          <span>NANITES: ONLINE &bull; PROVIDENCE STANDARD</span>
         </div>
         <h1 class="hero-name">
         <span class="hero-gradient-text">AkilesTheDark</span>
@@ -126,44 +133,12 @@
           &gt; <span id="typewriter-text"></span><span class="typewriter-cursor">|</span>
         </div>
         <p class="hero-desc">
-          Offensive security practitioner focused on web penetration testing, red teaming, and low-level reverse engineering. 
-          Welcome to my digital workspace and technical writeup hub.
+          Offensive security practitioner focused on web penetration testing, red teaming, and reverse engineering.
         </p>
-        <div class="hero-actions">
-          <a href="blogs.html" class="btn-cyber primary">
-            Browse writeups &rarr;
-          </a>
-          <a href="whoami.html" class="btn-cyber secondary">About me</a>
-          <button class="btn-cyber secondary terminal-trigger">
-            Launch Terminal &gt;_
-          </button>
-        </div>
-      </div>
-
-      <div class="hero-avatar-col">
-        <div class="avatar-gear-wrapper">
-          <svg class="avatar-gear-svg" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg">
-            <path d="M 242.0 130.0 L 254.6 139.8 L 253.1 152.0 L 237.8 160.4 L 233.5 172.9 L 241.4 186.7 L 235.3 197.4 L 218.0 199.3 L 209.2 209.2 L 211.2 225.1 L 201.5 232.6 L 184.7 227.7 L 172.9 233.5 L 168.6 248.9 L 156.8 252.1 L 143.2 241.2 L 130.0 242.0 L 120.2 254.6 L 108.0 253.1 L 99.6 237.8 L 87.1 233.5 L 73.3 241.4 L 62.6 235.3 L 60.7 218.0 L 50.8 209.2 L 34.9 211.2 L 27.4 201.5 L 32.3 184.7 L 26.5 172.9 L 11.1 168.6 L 7.9 156.8 L 18.8 143.2 L 18.0 130.0 L 5.4 120.2 L 6.9 108.0 L 22.2 99.6 L 26.5 87.1 L 18.6 73.3 L 24.7 62.6 L 42.0 60.7 L 50.8 50.8 L 48.8 34.9 L 58.5 27.4 L 75.3 32.3 L 87.1 26.5 L 91.4 11.1 L 103.2 7.9 L 116.8 18.8 L 130.0 18.0 L 139.8 5.4 L 152.0 6.9 L 160.4 22.2 L 172.9 26.5 L 186.7 18.6 L 197.4 24.7 L 199.3 42.0 L 209.2 50.8 L 225.1 48.8 L 232.6 58.5 L 227.7 75.3 L 233.5 87.1 L 248.9 91.4 L 252.1 103.2 L 241.2 116.8 Z" 
-                  fill="none" 
-                  stroke="url(#naniteGearGrad)" 
-                  stroke-width="3" />
-            <circle cx="130" cy="130" r="102" fill="none" stroke="rgba(125, 207, 255, 0.35)" stroke-width="1.5" stroke-dasharray="8 6" />
-            <circle cx="130" cy="130" r="95" fill="none" stroke="rgba(255, 158, 100, 0.45)" stroke-width="1" />
-            <defs>
-              <linearGradient id="naniteGearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#ff9e64" />
-                <stop offset="50%" stop-color="#7dcfff" />
-                <stop offset="100%" stop-color="#bb9af7" />
-              </linearGradient>
-            </defs>
-          </svg>
-          <img class="avatar-image-inner" 
-               src="./assets/avatar.png" 
-               alt="Akiless" 
-               onerror="window.handleImageError(this)">
-        </div>
       </div>
     </header>
+
+    <!-- Overview Stats -->
     <section class="overview-stats" aria-label="Portfolio overview">
       <a class="overview-stat" href="blogs.html">
         <span class="overview-stat-value" id="overview-post-count">0</span>
@@ -177,8 +152,6 @@
         <span class="overview-stat-value" id="overview-project-count">0</span>
         <span class="overview-stat-label">Projects</span>
       </a>
-    </section>
-
     <div class="blog-layout blog-layout-single">
 
       <!-- LEFT COLUMN: Activity Stream Feed -->
@@ -205,15 +178,15 @@
                         fill="none" stroke="url(#sideGearGrad)" stroke-width="2"/>
                   <defs>
                     <linearGradient id="sideGearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#ff9e64"/>
-                      <stop offset="50%" stop-color="#7dcfff"/>
-                      <stop offset="100%" stop-color="#bb9af7"/>
+                      <stop offset="0%" stop-color="#f6c453"/>
+                      <stop offset="50%" stop-color="#ff5964"/>
+                      <stop offset="100%" stop-color="#d94b59"/>
                     </linearGradient>
                   </defs>
                 </svg>
                 <img class="sidebar-avatar-img"
                      src="./assets/whoami.gif"
-                     alt="Akiless"
+                     alt="AkilesTheDark"
                      onerror="window.handleImageError(this)">
               </div>
               <div class="sidebar-author-name">AkilesTheDark</div>
@@ -291,7 +264,7 @@
       </aside>
     </div>
 
-    <!-- Clean Footer (Removed 2026 Akiless string per user request) -->
+    <!-- Clean Footer (Removed 2026 AkilesTheDark string per user request) -->
     <footer class="site-footer">
       <div class="footer-system">// PROVIDENZ_SYSTEMS // SEC_OPS_TERMINAL</div>
       <div class="footer-status">
