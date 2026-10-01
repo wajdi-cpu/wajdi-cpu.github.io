@@ -1,7 +1,8 @@
 /**
  * react-components/components.js
- * Lightweight, zero-build React 18 interactive components loaded via CDN.
- * Uses React.createElement to eliminate any Babel/Node build pipeline.
+ * Optional React renderers for portfolio data.
+ * The static pages currently use DataLoader instead of this module.
+ * Uses React.createElement and does not require a build pipeline.
  */
 
 (function (root, factory) {
@@ -19,7 +20,26 @@
   }
 
   const e = React.createElement;
-  const { useState, useEffect } = React;
+  const { useState } = React;
+
+  function safeURL(value, fallback = '#') {
+    const candidate = String(value ?? '').trim();
+    if (!candidate || /[\u0000-\u001f\\]/.test(candidate)) return fallback;
+    try {
+      const parsed = new URL(candidate, window.location.href);
+      return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? candidate : fallback;
+    } catch {
+      return fallback;
+    }
+  }
+
+  function isExternalURL(value) {
+    try {
+      return new URL(safeURL(value), window.location.href).origin !== window.location.origin;
+    } catch {
+      return false;
+    }
+  }
 
   // Global helper for image error
   const onImgError = (evt) => {
@@ -91,7 +111,7 @@
                 e('div', { className: 'timeline-card' },
                   e('img', {
                     className: 'timeline-thumb',
-                    src: item.image || './assets/placeholder.png',
+                    src: safeURL(item.image, './assets/placeholder.png'),
                     alt: item.title,
                     loading: 'lazy',
                     onError: onImgError
@@ -103,8 +123,8 @@
                     ),
                     e('h3', { className: 'timeline-title' },
                       e('a', {
-                        href: item.url || '#',
-                        target: (item.url && item.url.startsWith('http')) ? '_blank' : '_self',
+                        href: safeURL(item.url),
+                        target: isExternalURL(item.url) ? '_blank' : '_self',
                         rel: 'noopener noreferrer'
                       }, item.title)
                     ),
@@ -170,7 +190,7 @@
               e('div', { key: idx, className: 'project-card' },
                 e('img', {
                   className: 'project-cover',
-                  src: proj.image || './assets/placeholder.png',
+                  src: safeURL(proj.image, './assets/placeholder.png'),
                   alt: proj.name,
                   loading: 'lazy',
                   onError: onImgError
@@ -185,8 +205,8 @@
                   ),
                   e('div', { className: 'project-footer' },
                     e('a', {
-                      href: proj.url || '#',
-                      target: '_blank',
+                      href: safeURL(proj.url),
+                      target: isExternalURL(proj.url) ? '_blank' : '_self',
                       rel: 'noopener noreferrer'
                     }, 'View on GitHub →')
                   )
@@ -223,7 +243,7 @@
                   e('div', { className: 'cert-card-top' },
                     e('img', {
                       className: 'cert-badge-img',
-                      src: c.image || './assets/placeholder.png',
+                      src: safeURL(c.image, './assets/placeholder.png'),
                       alt: c.name,
                       loading: 'lazy',
                       onError: onImgError
@@ -258,7 +278,7 @@
                   e('div', { className: 'cert-card-top' },
                     e('img', {
                       className: 'cert-badge-img',
-                      src: c.image || './assets/placeholder.png',
+                      src: safeURL(c.image, './assets/placeholder.png'),
                       alt: c.name,
                       loading: 'lazy',
                       onError: onImgError

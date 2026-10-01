@@ -1,6 +1,6 @@
 /**
  * data-loader.js - Data fetching & rendering logic for AkilesTheDark Portfolio
- * Tokyo Night Design System // Generator Rex Cyber Engine
+ * Navy and gold theme // Generator Rex cyber engine
  * Renders activity feeds, projects grid, certification tracks, and writeups.
  */
 
@@ -47,7 +47,9 @@ const DataLoader = {
         return [];
       }
       const data = await response.json();
-      return Array.isArray(data) ? data : [];
+      return Array.isArray(data)
+        ? data.filter(record => record && typeof record === 'object' && !Array.isArray(record))
+        : [];
     } catch (err) {
       console.warn(`Fetch error for ${endpoint}:`, err.message);
       return [];
@@ -268,9 +270,9 @@ const DataLoader = {
         <div class="projects-grid">
           ${filtered.map(proj => `
             <div class="project-card">
-              <img class="project-cover" 
-                   src="${this.escapeHTML(this.resolvePath(proj.image))}" 
-                   alt="${this.escapeHTML(proj.name)}" 
+              <img class="project-cover"
+                   src="${this.escapeHTML(this.resolvePath(proj.image))}"
+                   alt="${this.escapeHTML(proj.name)}"
                    loading="lazy" 
                    onerror="window.handleImageError(this)">
               <div class="project-body">
@@ -344,9 +346,9 @@ const DataLoader = {
           ${earned.map(c => `
             <div class="cert-card">
               <div class="cert-card-top">
-                <img class="cert-badge-img" 
-                     src="${this.escapeHTML(this.resolvePath(c.image))}" 
-                     alt="${this.escapeHTML(c.name)}" 
+                <img class="cert-badge-img"
+                     src="${this.escapeHTML(this.resolvePath(c.image))}"
+                     alt="${this.escapeHTML(c.name)}"
                      loading="lazy" 
                      onerror="window.handleImageError(this)">
                 <div class="cert-info">
@@ -384,9 +386,9 @@ const DataLoader = {
             return `
               <div class="cert-card">
                 <div class="cert-card-top">
-                  <img class="cert-badge-img" 
-                       src="${this.escapeHTML(this.resolvePath(c.image))}" 
-                       alt="${this.escapeHTML(c.name)}" 
+                <img class="cert-badge-img"
+                       src="${this.escapeHTML(this.resolvePath(c.image))}"
+                       alt="${this.escapeHTML(c.name)}"
                        loading="lazy" 
                        onerror="window.handleImageError(this)">
                   <div class="cert-info">
@@ -439,9 +441,9 @@ const DataLoader = {
       <div class="blogs-list">
         ${blogs.map(post => `
           <article class="blog-card">
-              <img class="blog-thumb" 
-                 src="${this.escapeHTML(this.resolvePath(post.image))}" 
-                 alt="${this.escapeHTML(post.title)}" 
+              <img class="blog-thumb"
+                 src="${this.escapeHTML(this.resolvePath(post.image))}"
+                 alt="${this.escapeHTML(post.title)}"
                  loading="lazy" 
                  onerror="window.handleImageError(this)">
             <div class="blog-content">

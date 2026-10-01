@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AkilesTheDark // Projects & Tooling</title>
   <meta name="description" content="Projects and tools developed by AkilesTheDark (wajdi-cpu)">
-  
+
   <!-- Favicon -->
   <link rel="icon" type="image/jpeg" href="./assets/favicon.jpg">
-  
-  <!-- Fonts: Inter & JetBrains Mono -->
+
+  <!-- Fonts: Oxanium display, IBM Plex Sans body, JetBrains Mono terminal -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Oxanium:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="./css/style.css">
 </head>
 <body>
@@ -75,22 +75,22 @@
     <div class="terminal-window">
       <div class="terminal-header">
         <div class="terminal-controls">
-          <span id="terminal-close-btn" class="control-dot dot-red" title="Close"></span>
+          <button id="terminal-close-btn" type="button" class="control-dot dot-red" title="Close terminal" aria-label="Close terminal"></button>
           <span class="control-dot dot-yellow"></span>
           <span class="control-dot dot-green"></span>
         </div>
-        <span class="terminal-title">AkilesTheDark@nanite-os: ~ (rex-zsh)</span>
-        <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--accent-red);">STATUS: ONLINE</div>
+        <span class="terminal-title">AkilesTheDark@nanite-os: ~ (bash)</span>
+        <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--accent-gold);">STATUS: ONLINE</div>
       </div>
 
       <div class="terminal-body">
         <div id="terminal-output" class="terminal-output">
-          <div class="terminal-line"><span style="color:#ff5964;">// PROVIDENCE NANITE OS [Version 3.2.0-STABLE]</span></div>
-          <div class="terminal-line"><span style="color:#8c777d;">Interactive Linux virtual shell active. Type <span style="color:#f6c453;">help</span> for commands or explore with <span style="color:#ff5964;">ls</span>, <span style="color:#ff5964;">cd</span>, and <span style="color:#ff5964;">cat</span>.</span></div>
+          <div class="terminal-line"><span style="color:#e6bd68;">// PROVIDENCE NANITE OS [Version 3.2.0-STABLE]</span></div>
+          <div class="terminal-line"><span style="color:#9293b2;">Interactive Linux virtual shell active. Type <span style="color:#91b6ee;">help</span> for commands or explore with <span style="color:#e6bd68;">ls</span>, <span style="color:#e6bd68;">cd</span>, and <span style="color:#e6bd68;">cat</span>.</span></div>
         </div>
-        <div class="terminal-prompt-row">
-          <span id="terminal-prompt-label" class="terminal-prompt-user">AkilesTheDark@nanite-os:~$</span>
-          <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" placeholder="type a command (try 'ls', 'cat whoami.txt')...">
+        <div class="terminal-prompt-stack">
+          <div id="terminal-prompt-context" class="terminal-prompt-context">┌──(AkilesTheDark㉿nanite-os)-[~]</div>
+          <div class="terminal-prompt-row"><span id="terminal-prompt-label" class="terminal-prompt-user">└─$</span> <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" placeholder="type a command (try 'ls', 'cat whoami.txt')..."></div>
         </div>
       </div>
     </div>

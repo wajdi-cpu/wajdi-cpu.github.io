@@ -5,20 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AkilesTheDark // Latest Activity</title>
   <meta name="description" content="AkilesTheDark (wajdi-cpu) - Offensive Security Practitioner & Cybersecurity Student">
-  
+
   <!-- Favicon -->
   <link rel="icon" type="image/jpeg" href="./assets/favicon.jpg">
-  
-  <!-- Fonts: Inter & JetBrains Mono -->
+
+  <!-- Fonts: Oxanium display, IBM Plex Sans body, JetBrains Mono terminal -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Oxanium:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="./css/style.css">
 </head>
-<body>
+<body class="is-booting">
 
-  <!-- Brief system boot intro shown on the home page -->
+  <!-- Full-screen first stage; the page rises into view when initialization completes. -->
   <section id="boot-screen" class="boot-screen" role="status" aria-live="polite" aria-label="Starting AkilesTheDark profile">
     <div class="boot-console">
       <div class="boot-console-title"><span class="boot-led"></span> AKILESTHEDARK // SECURE SESSION</div>
@@ -87,22 +87,22 @@
     <div class="terminal-window">
       <div class="terminal-header">
         <div class="terminal-controls">
-          <span id="terminal-close-btn" class="control-dot dot-red" title="Close"></span>
+          <button id="terminal-close-btn" type="button" class="control-dot dot-red" title="Close terminal" aria-label="Close terminal"></button>
           <span class="control-dot dot-yellow"></span>
           <span class="control-dot dot-green"></span>
         </div>
         <span class="terminal-title">AkilesTheDark@nanite-os: ~ (bash)</span>
-        <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--accent-red);">STATUS: ONLINE</div>
+        <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--accent-gold);">STATUS: ONLINE</div>
       </div>
 
       <div class="terminal-body">
         <div id="terminal-output" class="terminal-output">
-          <div class="terminal-line"><span style="color:#ff5964;">Providence Shell 3.2 // session opened for AkilesTheDark</span></div>
-          <div class="terminal-line"><span style="color:#8c777d;">Virtual Linux environment ready. Type <span style="color:#f6c453;">help</span> to see commands, pipes, redirects, and shortcuts.</span></div>
+          <div class="terminal-line"><span style="color:#e6bd68;">Providence Shell 3.2 // session opened for AkilesTheDark</span></div>
+          <div class="terminal-line"><span style="color:#9293b2;">Virtual Linux environment ready. Type <span style="color:#91b6ee;">help</span> to see commands, pipes, redirects, and shortcuts.</span></div>
         </div>
-        <div class="terminal-prompt-row">
-          <span id="terminal-prompt-label" class="terminal-prompt-user">AkilesTheDark@nanite-os:~$</span>
-          <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" aria-label="Terminal command" placeholder="try help, ls -lah, or cat README.md | grep security">
+        <div class="terminal-prompt-stack">
+          <div id="terminal-prompt-context" class="terminal-prompt-context">┌──(AkilesTheDark㉿nanite-os)-[~]</div>
+          <div class="terminal-prompt-row"><span id="terminal-prompt-label" class="terminal-prompt-user">└─$</span> <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" aria-label="Terminal command" placeholder="try help, ls -lah, or cat README.md | grep security"></div>
         </div>
       </div>
     </div>
@@ -114,9 +114,9 @@
     <header class="hero-section">
       <div class="hero-avatar-col">
         <div class="avatar-portrait-wrapper">
-          <img class="avatar-image-inner" 
-               src="./assets/avatar.png" 
-               alt="AkilesTheDark" 
+          <img class="avatar-image-inner"
+               src="./assets/avatar.png"
+               alt="AkilesTheDark"
                onerror="window.handleImageError(this)">
         </div>
       </div>
@@ -178,9 +178,9 @@
                         fill="none" stroke="url(#sideGearGrad)" stroke-width="2"/>
                   <defs>
                     <linearGradient id="sideGearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#f6c453"/>
-                      <stop offset="50%" stop-color="#ff5964"/>
-                      <stop offset="100%" stop-color="#d94b59"/>
+                      <stop offset="0%" stop-color="#91b6ee"/>
+                      <stop offset="50%" stop-color="#e6bd68"/>
+                      <stop offset="100%" stop-color="#aa8234"/>
                     </linearGradient>
                   </defs>
                 </svg>

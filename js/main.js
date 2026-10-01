@@ -1,7 +1,7 @@
 /**
  * main.js - Generator Rex Nanite & Mechanical Gear Cyber Engine
- * Rex Red and Gold Palette (#191619, #171417, #241d22, #ff5964, #f6c453, #ff4356, #d94b59, #f6c453)
- * 
+ * Navy and Gold Palette (#191925, #171722, #242435, #e6bd68, #91b6ee, #f2d58c, #aa8234)
+ *
  * Features:
  *  - Show-Accurate Generator Rex Nanites:
  *      * Glowing gold orb core inside a reflective glass capsule
@@ -49,9 +49,26 @@ function initHomeBootSequence() {
   const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const bootDuration = prefersReducedMotion ? 600 : 3200;
 
+  // Keep the reveal anchored at the top instead of restoring a stale scroll position.
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
+  const fadeStartedAt = performance.now();
+  const fadeBootScreen = (now) => {
+    const progress = Math.min((now - fadeStartedAt) / bootDuration, 1);
+    bootScreen.style.opacity = String(1 - progress);
+    if (progress < 1) window.requestAnimationFrame(fadeBootScreen);
+  };
+  window.requestAnimationFrame(fadeBootScreen);
+
   window.setTimeout(() => {
+    bootScreen.style.opacity = '0';
     bootScreen.classList.add('is-finished');
-    window.setTimeout(() => bootScreen.remove(), prefersReducedMotion ? 0 : 500);
+    document.body.classList.remove('is-booting');
+    window.setTimeout(() => {
+      bootScreen.remove();
+      window.scrollTo(0, 0);
+    }, prefersReducedMotion ? 0 : 900);
   }, bootDuration);
 }
 
@@ -70,6 +87,29 @@ function initNaniteAndGearCanvas() {
   let shockwaves = [];
   let sparks = [];
   const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let stars = [];
+  let galaxyDust = [];
+
+  function resetStars() {
+    const count = Math.min(190, Math.max(70, Math.round((width * height) / 11500)));
+    stars = Array.from({ length: count }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      radius: Math.random() * 1.15 + 0.25,
+      phase: Math.random() * Math.PI * 2,
+      warmth: Math.random()
+    }));
+    galaxyDust = Array.from({ length: 150 }, () => ({
+      arm: Math.floor(Math.random() * 4),
+      progress: Math.random(),
+      offset: (Math.random() - 0.5) * 0.42,
+      radius: Math.random() * 1.35 + 0.35,
+      phase: Math.random() * Math.PI * 2,
+      warmth: Math.random()
+    }));
+  }
+
+  resetStars();
 
   window.addEventListener('mousemove', (e) => {
     mouse.x = e.clientX;
@@ -86,6 +126,7 @@ function initNaniteAndGearCanvas() {
   window.addEventListener('resize', () => {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
+    resetStars();
     setupGearAssemblies();
   });
 
@@ -103,7 +144,7 @@ function initNaniteAndGearCanvas() {
       maxRadius: Math.max(width, height) * 0.28 * power,
       speed: 9 * power,
       alpha: 1.0,
-      color: window.GeneratorRexEngine.isOverdrive ? '#f6c453' : '#ff5964'
+      color: window.GeneratorRexEngine.isOverdrive ? '#91b6ee' : '#e6bd68'
     });
 
     // Spawn burst of contact sparks
@@ -117,7 +158,7 @@ function initNaniteAndGearCanvas() {
         vy: Math.sin(spkAngle) * spkSpeed,
         life: 1.0,
         decay: Math.random() * 0.04 + 0.02,
-        color: Math.random() > 0.4 ? '#f6c453' : '#ff5964',
+        color: Math.random() > 0.4 ? '#91b6ee' : '#e6bd68',
         size: Math.random() * 2 + 1.2
       });
     }
@@ -390,9 +431,9 @@ function initNaniteAndGearCanvas() {
     gearClusters.push({
       name: 'SLAM_CANNON_LATERAL',
       gears: [
-        { x: c1X, y: c1Y, rO: g1Outer, rI: g1Inner, teeth: g1Teeth, speed: 0.0035, color: 'rgba(255, 67, 86, 0.12)', spokeR: 15, spokes: 6, label: '[SLAM-CANNON // FLYWHEEL-A]', isHeavy: true },
-        { x: c2X, y: c2Y, rO: g2Outer, rI: g2Inner, teeth: g2Teeth, speed: -0.0035 * (g1Teeth / g2Teeth), color: 'rgba(246, 196, 83, 0.13)', spokeR: 9, spokes: 4, label: '[IDLER-02]' },
-        { x: c3X, y: c3Y, rO: g3Outer, rI: g3Inner, teeth: g3Teeth, speed: 0.0035 * (g1Teeth / g3Teeth), color: 'rgba(255, 89, 100, 0.13)', spokeR: 5, spokes: 3, label: '[PINION-03]' }
+        { x: c1X, y: c1Y, rO: g1Outer, rI: g1Inner, teeth: g1Teeth, speed: 0.0035, color: 'rgba(242, 213, 140, 0.12)', spokeR: 15, spokes: 6, label: '[SLAM-CANNON // FLYWHEEL-A]', isHeavy: true },
+        { x: c2X, y: c2Y, rO: g2Outer, rI: g2Inner, teeth: g2Teeth, speed: -0.0035 * (g1Teeth / g2Teeth), color: 'rgba(145, 182, 238, 0.13)', spokeR: 9, spokes: 4, label: '[IDLER-02]' },
+        { x: c3X, y: c3Y, rO: g3Outer, rI: g3Inner, teeth: g3Teeth, speed: 0.0035 * (g1Teeth / g3Teeth), color: 'rgba(230, 189, 104, 0.13)', spokeR: 5, spokes: 3, label: '[PINION-03]' }
       ],
       meshPoints: [
         { x: c1X + Math.cos(angle12) * pitch1, y: c1Y + Math.sin(angle12) * pitch1 },
@@ -424,8 +465,8 @@ function initNaniteAndGearCanvas() {
       hasPiston: true,
       pistonGearIndex: 0,
       gears: [
-        { x: b1X, y: b1Y, rO: b1Outer, rI: b1Inner, teeth: b1Teeth, speed: -0.0028, color: 'rgba(255, 67, 86, 0.11)', spokeR: 16, spokes: 6, label: '[PUNK-BUSTERS // CRANK-GEAR]', isHeavy: true },
-        { x: b2X, y: b2Y, rO: b2Outer, rI: b2Inner, teeth: b2Teeth, speed: 0.0028 * (b1Teeth / b2Teeth), color: 'rgba(246, 196, 83, 0.12)', spokeR: 10, spokes: 4, label: '[PINION-RATIO 1:1.6]' }
+        { x: b1X, y: b1Y, rO: b1Outer, rI: b1Inner, teeth: b1Teeth, speed: -0.0028, color: 'rgba(242, 213, 140, 0.11)', spokeR: 16, spokes: 6, label: '[PUNK-BUSTERS // CRANK-GEAR]', isHeavy: true },
+        { x: b2X, y: b2Y, rO: b2Outer, rI: b2Inner, teeth: b2Teeth, speed: 0.0028 * (b1Teeth / b2Teeth), color: 'rgba(145, 182, 238, 0.12)', spokeR: 10, spokes: 4, label: '[PINION-RATIO 1:1.6]' }
       ],
       meshPoints: [
         { x: b1X + Math.cos(angleB) * pitchB1, y: b1Y + Math.sin(angleB) * pitchB1 }
@@ -459,7 +500,7 @@ function initNaniteAndGearCanvas() {
       }));
 
       this.archetype = 'omega';
-      this.coreColor = '#f6c453';
+      this.coreColor = '#91b6ee';
 
       this.pulsePhase = Math.random() * Math.PI * 2;
     }
@@ -510,9 +551,9 @@ function initNaniteAndGearCanvas() {
       const tail = this.trail[0];
       const head = this.trail[this.trail.length - 1];
       const goldFade = ctx.createLinearGradient(tail.x, tail.y, head.x, head.y);
-      goldFade.addColorStop(0, 'rgba(246, 196, 83, 0)');
-      goldFade.addColorStop(0.72, 'rgba(246, 196, 83, 0.42)');
-      goldFade.addColorStop(1, 'rgba(255, 232, 164, 0.95)');
+      goldFade.addColorStop(0, 'rgba(145, 182, 238, 0)');
+      goldFade.addColorStop(0.72, 'rgba(145, 182, 238, 0.42)');
+      goldFade.addColorStop(1, 'rgba(215, 228, 255, 0.95)');
 
       ctx.save();
       ctx.lineCap = 'round';
@@ -524,7 +565,7 @@ function initNaniteAndGearCanvas() {
       }
       ctx.strokeStyle = goldFade;
       ctx.lineWidth = 3.2;
-      ctx.shadowColor = '#f6c453';
+      ctx.shadowColor = '#91b6ee';
       ctx.shadowBlur = 10;
       ctx.stroke();
       ctx.lineWidth = 1.1;
@@ -558,20 +599,20 @@ function initNaniteAndGearCanvas() {
         ctx.lineTo(root, rod.width * 0.42);
         ctx.closePath();
         // A pale rim keeps the dark rod silhouettes readable over the dark page.
-        ctx.strokeStyle = 'rgba(255, 112, 112, 0.98)';
+        ctx.strokeStyle = 'rgba(230, 189, 104, 0.98)';
         ctx.lineWidth = 1.6;
         ctx.stroke();
         ctx.fillStyle = '#090b12';
         ctx.fill();
 
-        ctx.strokeStyle = 'rgba(255, 76, 88, 0.95)';
+        ctx.strokeStyle = 'rgba(230, 189, 104, 0.95)';
         ctx.lineWidth = 0.8;
         ctx.beginPath();
         ctx.moveTo(root + 0.4, -rod.width * 0.2);
         ctx.lineTo(shaftEnd, -rod.width * 0.16);
         ctx.stroke();
 
-        ctx.fillStyle = '#f6c453';
+        ctx.fillStyle = '#91b6ee';
         ctx.beginPath();
         ctx.arc(root, 0, 0.75, 0, Math.PI * 2);
         ctx.fill();
@@ -583,12 +624,12 @@ function initNaniteAndGearCanvas() {
         -orbRadius * 0.3, -orbRadius * 0.35, orbRadius * 0.05,
         0, 0, orbRadius
       );
-      orbGradient.addColorStop(0, '#fff8dc');
-      orbGradient.addColorStop(0.28, '#ffe27a');
-      orbGradient.addColorStop(0.72, '#f6c453');
-      orbGradient.addColorStop(1, '#d9931a');
+      orbGradient.addColorStop(0, '#e6eaff');
+      orbGradient.addColorStop(0.28, '#91b6ee');
+      orbGradient.addColorStop(0.72, '#91b6ee');
+      orbGradient.addColorStop(1, '#617ab7');
 
-      ctx.shadowColor = '#f6c453';
+      ctx.shadowColor = '#91b6ee';
       ctx.shadowBlur = 10;
       ctx.fillStyle = orbGradient;
       ctx.beginPath();
@@ -598,11 +639,11 @@ function initNaniteAndGearCanvas() {
 
       // Clear glass capsule around the golden core, with a red rim and glints.
       const glassRadius = orbRadius + 1.5;
-      ctx.fillStyle = 'rgba(255, 54, 72, 0.08)';
+      ctx.fillStyle = 'rgba(242, 213, 140, 0.08)';
       ctx.beginPath();
       ctx.arc(0, 0, glassRadius, 0, Math.PI * 2);
       ctx.fill();
-      ctx.strokeStyle = 'rgba(255, 116, 125, 0.95)';
+      ctx.strokeStyle = 'rgba(230, 189, 104, 0.95)';
       ctx.lineWidth = 0.85;
       ctx.beginPath();
       ctx.arc(0, 0, glassRadius, 0, Math.PI * 2);
@@ -627,7 +668,7 @@ function initNaniteAndGearCanvas() {
         const y2 = Math.sin(zapAngle) * (glassRadius + zapLength);
         const dx = x2 - x1;
         const dy = y2 - y1;
-        const color = Math.random() < 0.65 ? '#ff4657' : '#ffe27a';
+        const color = Math.random() < 0.65 ? '#e6bd68' : '#91b6ee';
 
         ctx.save();
         ctx.strokeStyle = color;
@@ -656,9 +697,190 @@ function initNaniteAndGearCanvas() {
   let gearTime = 0;
   const maxCircuitDist = 150;
 
+  function drawSpaceBackdrop(time) {
+    ctx.save();
+
+    // A broad, low-contrast nebula band adds depth without competing with page text.
+    ctx.save();
+    ctx.translate(width * 0.5, height * 0.48);
+    ctx.rotate(-0.34);
+    const nebula = ctx.createLinearGradient(-width * 0.48, 0, width * 0.48, 0);
+    nebula.addColorStop(0, 'rgba(145, 182, 238, 0)');
+    nebula.addColorStop(0.28, 'rgba(145, 182, 238, 0.045)');
+    nebula.addColorStop(0.52, 'rgba(230, 189, 104, 0.065)');
+    nebula.addColorStop(0.76, 'rgba(145, 182, 238, 0.035)');
+    nebula.addColorStop(1, 'rgba(145, 182, 238, 0)');
+    ctx.fillStyle = nebula;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, width * 0.56, Math.max(32, height * 0.105), 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // Centered spiral galaxy with a bright core, layered arms, and rotating dust.
+    ctx.save();
+    const galaxyRadius = Math.min(width, height) * 0.25;
+    ctx.translate(width * 0.5, height * 0.5);
+    ctx.rotate(-0.12 + time * 0.22);
+    ctx.scale(1, 0.56);
+
+    const galaxyHalo = ctx.createRadialGradient(0, 0, galaxyRadius * 0.04, 0, 0, galaxyRadius);
+    galaxyHalo.addColorStop(0, 'rgba(242, 213, 140, 0.2)');
+    galaxyHalo.addColorStop(0.16, 'rgba(145, 182, 238, 0.14)');
+    galaxyHalo.addColorStop(0.52, 'rgba(89, 111, 174, 0.075)');
+    galaxyHalo.addColorStop(1, 'rgba(45, 57, 93, 0)');
+    ctx.fillStyle = galaxyHalo;
+    ctx.beginPath();
+    ctx.arc(0, 0, galaxyRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+    for (let arm = 0; arm < 4; arm++) {
+      const armOffset = (Math.PI * 2 * arm) / 4;
+      ctx.beginPath();
+      for (let step = 0; step <= 120; step++) {
+        const progress = step / 120;
+        const angle = armOffset + progress * Math.PI * 3.7;
+        const radius = galaxyRadius * (0.06 + progress * 0.91);
+        const x = Math.cos(angle) * radius;
+        const y = Math.sin(angle) * radius;
+        if (step === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      const armColor = arm % 2 === 0 ? 'rgba(145, 182, 238, 0.16)' : 'rgba(230, 189, 104, 0.13)';
+      ctx.strokeStyle = armColor;
+      ctx.lineWidth = Math.max(8, galaxyRadius * 0.075);
+      ctx.shadowColor = arm % 2 === 0 ? 'rgba(145, 182, 238, 0.48)' : 'rgba(230, 189, 104, 0.42)';
+      ctx.shadowBlur = galaxyRadius * 0.12;
+      ctx.stroke();
+
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = arm % 2 === 0 ? 'rgba(204, 220, 255, 0.24)' : 'rgba(255, 224, 155, 0.22)';
+      ctx.lineWidth = Math.max(1.5, galaxyRadius * 0.012);
+      ctx.stroke();
+    }
+
+    for (const dust of galaxyDust) {
+      const angle = (dust.arm * Math.PI * 0.5) + dust.progress * Math.PI * 3.7 + dust.offset;
+      const radius = galaxyRadius * (0.06 + dust.progress * 0.91);
+      const twinkle = 0.3 + (Math.sin(time * 1.1 + dust.phase) + 1) * 0.26;
+      ctx.globalAlpha = twinkle;
+      ctx.fillStyle = dust.warmth > 0.58 ? '#ffe4a1' : '#c4d7ff';
+      ctx.beginPath();
+      ctx.arc(Math.cos(angle) * radius, Math.sin(angle) * radius, dust.radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    const galacticCore = ctx.createRadialGradient(0, 0, 1, 0, 0, galaxyRadius * 0.18);
+    galacticCore.addColorStop(0, 'rgba(255, 248, 224, 0.88)');
+    galacticCore.addColorStop(0.16, 'rgba(255, 224, 155, 0.55)');
+    galacticCore.addColorStop(0.52, 'rgba(145, 182, 238, 0.2)');
+    galacticCore.addColorStop(1, 'rgba(145, 182, 238, 0)');
+    ctx.fillStyle = galacticCore;
+    ctx.beginPath();
+    ctx.arc(0, 0, galaxyRadius * 0.18, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    for (const star of stars) {
+      const twinkle = 0.35 + (Math.sin(time * 0.7 + star.phase) + 1) * 0.22;
+      ctx.globalAlpha = twinkle;
+      ctx.fillStyle = star.warmth > 0.72 ? '#f2d58c' : '#b8cafa';
+      ctx.beginPath();
+      ctx.arc(star.x * width, star.y * height, star.radius, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (star.radius > 1.05 && twinkle > 0.72) {
+        ctx.globalAlpha = (twinkle - 0.6) * 0.36;
+        ctx.fillRect(star.x * width - 3.5, star.y * height - 0.35, 7, 0.7);
+        ctx.fillRect(star.x * width - 0.35, star.y * height - 3.5, 0.7, 7);
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    const holes = [
+      { x: width * 0.19, y: height * 0.34, r: Math.max(27, Math.min(54, width * 0.035)), tilt: -0.28, phase: 0 },
+      { x: width * 0.82, y: height * 0.68, r: Math.max(22, Math.min(40, width * 0.026)), tilt: 0.34, phase: 2.4 }
+    ];
+
+    for (const hole of holes) {
+      const r = hole.r;
+      const pulse = 0.88 + Math.sin(time * 0.45 + hole.phase) * 0.08;
+      const halo = ctx.createRadialGradient(hole.x, hole.y, r * 0.68, hole.x, hole.y, r * 2.5);
+      halo.addColorStop(0, 'rgba(230, 189, 104, 0.12)');
+      halo.addColorStop(0.38, 'rgba(145, 182, 238, 0.06)');
+      halo.addColorStop(1, 'rgba(15, 16, 28, 0)');
+      ctx.fillStyle = halo;
+      ctx.beginPath();
+      ctx.arc(hole.x, hole.y, r * 2.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // The luminous accretion disk sits behind the dark event horizon.
+      ctx.save();
+      ctx.translate(hole.x, hole.y);
+      ctx.rotate(hole.tilt + time * 0.035 + Math.sin(time * 0.12 + hole.phase) * 0.025);
+      ctx.globalAlpha = pulse;
+      ctx.shadowColor = 'rgba(230, 189, 104, 0.75)';
+      ctx.shadowBlur = r * 0.62;
+      const disk = ctx.createLinearGradient(-r * 2.15, 0, r * 2.15, 0);
+      disk.addColorStop(0, 'rgba(230, 189, 104, 0)');
+      disk.addColorStop(0.2, 'rgba(230, 189, 104, 0.12)');
+      disk.addColorStop(0.48, 'rgba(255, 224, 155, 0.62)');
+      disk.addColorStop(0.54, 'rgba(145, 182, 238, 0.28)');
+      disk.addColorStop(0.82, 'rgba(230, 189, 104, 0.16)');
+      disk.addColorStop(1, 'rgba(230, 189, 104, 0)');
+      ctx.fillStyle = disk;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, r * 2.15, r * 0.48, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Orbiting hot particles animate the accretion flow around each horizon.
+      for (let particle = 0; particle < 15; particle++) {
+        const angle = time * (0.72 + (particle % 4) * 0.08) + (particle * Math.PI * 2) / 15 + hole.phase;
+        const orbitX = Math.cos(angle) * r * (1.32 + (particle % 3) * 0.19);
+        const orbitY = Math.sin(angle) * r * (0.31 + (particle % 4) * 0.055);
+        const particleSize = 0.7 + (particle % 3) * 0.38;
+        ctx.globalAlpha = 0.34 + (Math.sin(angle * 1.7) + 1) * 0.2;
+        ctx.fillStyle = particle % 5 === 0 ? '#b9d3ff' : '#ffe4a1';
+        ctx.shadowColor = particle % 5 === 0 ? '#91b6ee' : '#e6bd68';
+        ctx.shadowBlur = 7;
+        ctx.beginPath();
+        ctx.arc(orbitX, orbitY, particleSize, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+
+      ctx.strokeStyle = 'rgba(255, 220, 150, 0.54)';
+      ctx.lineWidth = 1.1;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, r * 1.58, r * 0.32, 0, Math.PI * 0.05, Math.PI * 0.95);
+      ctx.stroke();
+
+      const eventHorizon = ctx.createRadialGradient(-r * 0.2, -r * 0.25, r * 0.12, 0, 0, r);
+      eventHorizon.addColorStop(0, '#080911');
+      eventHorizon.addColorStop(0.72, '#05060b');
+      eventHorizon.addColorStop(0.94, '#131521');
+      eventHorizon.addColorStop(1, 'rgba(230, 189, 104, 0.5)');
+      ctx.fillStyle = eventHorizon;
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(230, 189, 104, 0.38)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(0, 0, r * 1.04, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    ctx.restore();
+  }
+
   function drawCircuitLattice(n1, n2, dist, alpha) {
     const isOverdriveArc = window.GeneratorRexEngine.isOverdrive || n1.archetype === 'overdrive' || n2.archetype === 'overdrive';
-    const strokeColor = isOverdriveArc ? `rgba(246, 196, 83, ${alpha * 1.35})` : `rgba(255, 89, 100, ${alpha})`;
+    const strokeColor = isOverdriveArc ? `rgba(145, 182, 238, ${alpha * 1.35})` : `rgba(230, 189, 104, ${alpha})`;
 
     ctx.save();
     ctx.strokeStyle = strokeColor;
@@ -681,7 +903,7 @@ function initNaniteAndGearCanvas() {
     }
     ctx.stroke();
 
-    ctx.fillStyle = isOverdriveArc ? '#f6c453' : '#ff5964';
+    ctx.fillStyle = isOverdriveArc ? '#91b6ee' : '#e6bd68';
     const midX = (n1.x + n2.x) / 2;
     const midY = (n1.y + n2.y) / 2;
     ctx.beginPath();
@@ -740,6 +962,9 @@ function initNaniteAndGearCanvas() {
     const speedMult = window.GeneratorRexEngine.isOverdrive ? 1.25 : 1.0;
     gearTime += 0.009 * speedMult;
 
+    // Cosmic layer is painted first so the moving nanites remain in front.
+    drawSpaceBackdrop(gearTime);
+
     // 1. Draw Background Mechanical Gear Assemblies
     for (let c = 0; c < gearClusters.length; c++) {
       const cluster = gearClusters[c];
@@ -765,7 +990,7 @@ function initNaniteAndGearCanvas() {
       if (cluster.hasPiston) {
         const pGear = cluster.gears[cluster.pistonGearIndex];
         const pAngle = gearTime * pGear.speed * 40;
-        drawHydraulicPistonMechanism(ctx, pGear.x, pGear.y, pGear.rO, pAngle, 'rgba(255, 67, 86, 0.22)');
+        drawHydraulicPistonMechanism(ctx, pGear.x, pGear.y, pGear.rO, pAngle, 'rgba(242, 213, 140, 0.22)');
       }
 
       if (cluster.meshPoints && Math.random() < (window.GeneratorRexEngine.isOverdrive ? 0.12 : 0.04)) {
@@ -779,7 +1004,7 @@ function initNaniteAndGearCanvas() {
             vy: Math.sin(spkAngle) * (Math.random() * 2 + 1),
             life: 1.0,
             decay: 0.06,
-            color: Math.random() > 0.5 ? '#f6c453' : '#ff5964',
+            color: Math.random() > 0.5 ? '#91b6ee' : '#e6bd68',
             size: Math.random() * 1.5 + 1.0
           });
         }
@@ -802,8 +1027,8 @@ function initNaniteAndGearCanvas() {
 
           if (dist < 85 && Math.random() < 0.015) {
             const arcColor = (window.GeneratorRexEngine.isOverdrive || nanites[i].archetype === 'overdrive')
-              ? 'rgba(246, 196, 83, 0.85)'
-              : 'rgba(255, 89, 100, 0.8)';
+              ? 'rgba(145, 182, 238, 0.85)'
+              : 'rgba(230, 189, 104, 0.8)';
             drawElectricArc(nanites[i].x, nanites[i].y, nanites[j].x, nanites[j].y, arcColor);
           }
         }
@@ -820,13 +1045,13 @@ function initNaniteAndGearCanvas() {
           ctx.moveTo(nanites[i].x, nanites[i].y);
           ctx.lineTo(mouse.x, mouse.y);
           ctx.strokeStyle = window.GeneratorRexEngine.isOverdrive
-            ? `rgba(246, 196, 83, ${mAlpha})`
-            : `rgba(255, 89, 100, ${mAlpha})`;
+            ? `rgba(145, 182, 238, ${mAlpha})`
+            : `rgba(230, 189, 104, ${mAlpha})`;
           ctx.lineWidth = 1.3;
           ctx.stroke();
 
           if (Math.random() < 0.01) {
-            drawElectricArc(nanites[i].x, nanites[i].y, mouse.x, mouse.y, 'rgba(246, 196, 83, 0.7)');
+            drawElectricArc(nanites[i].x, nanites[i].y, mouse.x, mouse.y, 'rgba(145, 182, 238, 0.7)');
           }
         }
       }
@@ -1005,8 +1230,150 @@ function initCyberTerminal() {
   const terminalInput = document.getElementById('terminal-input');
   const terminalOutput = document.getElementById('terminal-output');
   const promptLabel = document.getElementById('terminal-prompt-label');
+  const promptContext = document.getElementById('terminal-prompt-context');
 
   if (!modal || !terminalInput || !terminalOutput) return;
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-label', 'Browser-based virtual terminal');
+
+  const terminalWindow = modal.querySelector('.terminal-window');
+  const terminalHeader = modal.querySelector('.terminal-header');
+  const terminalBody = modal.querySelector('.terminal-body');
+  let terminalClock;
+
+  if (terminalWindow && terminalHeader && terminalBody) {
+    const statusbar = document.createElement('div');
+    statusbar.className = 'omarchy-statusbar';
+    statusbar.innerHTML = '<span class="omarchy-status-brand"><span class="omarchy-status-dot"></span> AKILESTHEDARK <span class="omarchy-status-muted">/ WORKSPACE 1</span></span><time id="terminal-clock"></time><span class="omarchy-status-state">SIMULATED SYSTEM <span>•</span> NETWORK ISOLATED</span>';
+
+    const workspace = document.createElement('div');
+    workspace.className = 'omarchy-workspace';
+
+    const leftColumn = document.createElement('div');
+    leftColumn.className = 'omarchy-left-column';
+
+    const shellPane = document.createElement('section');
+    shellPane.className = 'omarchy-pane omarchy-shell-pane';
+    shellPane.setAttribute('aria-label', 'Interactive virtual shell');
+    shellPane.innerHTML = '<div class="omarchy-pane-heading"><span>›_ SHELL</span><span>/bin/bash</span></div>';
+    shellPane.appendChild(terminalBody);
+
+    const filesPane = document.createElement('section');
+    filesPane.className = 'omarchy-pane omarchy-files-pane';
+    filesPane.setAttribute('aria-label', 'Virtual home directory');
+    filesPane.innerHTML = '<div class="omarchy-pane-heading"><span>▸ VIRTUAL FILES</span><span>~/</span></div><div class="omarchy-file-tree"><div class="omarchy-tree-path">📁 ~/AkilesTheDark</div><div>├─ <span>README.md</span></div><div>├─ <span>whoami.txt</span></div><div>├─ <span>skills.txt</span></div><div>├─ <span>contact.json</span></div><div>├─ <span>projects/</span></div><div>└─ <span>.nanite/</span></div></div><div class="omarchy-files-footnote">BROWSER VIRTUAL FILESYSTEM</div>';
+
+    leftColumn.append(shellPane, filesPane);
+
+    const monitor = document.createElement('aside');
+    monitor.className = 'omarchy-monitor-column';
+    monitor.setAttribute('aria-label', 'Simulated system dashboard');
+    monitor.innerHTML = `
+      <section class="omarchy-pane omarchy-cpu-pane">
+        <div class="omarchy-pane-heading"><span>⌁ CPU</span><span>PRESET · LIVE SIMULATION</span></div>
+        <div class="omarchy-cpu-summary"><strong>CPU</strong><span data-cpu-value>12.8%</span><span data-cpu-temp>46°C</span></div>
+        <div class="omarchy-meter" data-cpu-meter><span data-cpu-bar style="width:13%"></span></div>
+        <div class="omarchy-core-grid">${Array.from({ length: 8 }, (_, i) => `<span data-core-index="${i}">C${i}<i><b data-core-bar style="width:${12 + ((i * 17) % 46)}%"></b></i><em data-core-value>1%</em></span>`).join('')}</div>
+        <div class="omarchy-pane-foot">UP 02:07:05 <span>LOAD 0.20 0.10 0.07</span></div>
+      </section>
+      <div class="omarchy-resource-grid">
+        <section class="omarchy-pane omarchy-memory-pane">
+          <div class="omarchy-pane-heading"><span>⌁ MEMORY</span></div>
+          <strong><span data-memory-used>2.1</span> <small>/ 7.7 GiB</small></strong><div class="omarchy-meter"><span data-memory-bar style="width:28%"></span></div>
+          <p>Available <b data-memory-available>5.2 GiB</b></p><p>Cache <b data-memory-cache>1.8 GiB</b></p>
+        </section>
+        <section class="omarchy-pane omarchy-disk-pane">
+          <div class="omarchy-pane-heading"><span>⌁ DISK</span></div>
+          <strong>8.2 <small>/ 24 GiB</small></strong><div class="omarchy-meter"><span style="width:36%"></span></div>
+          <p>Root <b>36%</b></p><p>Virtual home <b>10%</b></p>
+        </section>
+      </div>
+      <section class="omarchy-pane omarchy-process-pane">
+        <div class="omarchy-pane-heading"><span>⌁ PROCESSES</span><span>PID · PROGRAM · USER · MEM · CPU</span></div>
+        <div class="omarchy-process-row" data-process-index="0"><b>581</b><span>nanite-monitor</span><em>AkilesTheDark</em><small data-process-memory>82M</small><strong data-process-cpu>1.2%</strong></div>
+        <div class="omarchy-process-row" data-process-index="1"><b>412</b><span>bash</span><em>AkilesTheDark</em><small data-process-memory>14M</small><strong data-process-cpu>0.3%</strong></div>
+        <div class="omarchy-process-row" data-process-index="2"><b>1</b><span>systemd</span><em>root</em><small data-process-memory>68M</small><strong data-process-cpu>0.1%</strong></div>
+        <div class="omarchy-process-row" data-process-index="3"><b>620</b><span>terminal-ui</span><em>AkilesTheDark</em><small data-process-memory>124M</small><strong data-process-cpu>0.4%</strong></div>
+        <div class="omarchy-pane-foot">LIVE SIMULATION · BROWSER ONLY</div>
+      </section>
+      <section class="omarchy-pane omarchy-network-pane">
+        <div class="omarchy-pane-heading"><span>⌁ NETWORK</span><span>OFFLINE</span></div>
+        <div class="omarchy-network-bars" aria-hidden="true">▂ ▄ ▃ ▅ ▂ ▆ ▃ ▄ ▂ ▅ ▃ ▆ ▂ ▄ ▅ ▃ ▂ ▆ ▄ ▃</div>
+        <div class="omarchy-network-labels"><span>↑ 0 B/s</span><span>↓ 0 B/s</span></div>
+      </section>`;
+
+    terminalHeader.after(statusbar);
+    workspace.append(leftColumn, monitor);
+    statusbar.after(workspace);
+    terminalClock = statusbar.querySelector('#terminal-clock');
+  }
+
+  const updateTerminalClock = () => {
+    if (terminalClock) terminalClock.textContent = new Intl.DateTimeFormat(undefined, {
+      weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false
+    }).format(new Date());
+  };
+  updateTerminalClock();
+
+  const systemMonitor = terminalWindow?.querySelector('.omarchy-monitor-column');
+  let systemMetricsInterval = null;
+  let metricsTick = 0;
+  let cpuLoad = 14;
+  let memoryUsed = 2.1;
+
+  const updateSystemMetrics = () => {
+    if (!systemMonitor) return;
+    metricsTick++;
+
+    const cpuTarget = 7 + Math.random() * 62 + Math.sin(metricsTick / 4) * 9;
+    cpuLoad = Math.max(2, Math.min(88, cpuLoad + (cpuTarget - cpuLoad) * 0.32));
+    if (metricsTick % 17 === 0) cpuLoad = Math.min(91, cpuLoad + 8 + Math.random() * 12);
+
+    memoryUsed = Math.min(6.7, memoryUsed + 0.004 + Math.random() * 0.035);
+    if (metricsTick % 40 === 0) memoryUsed = Math.max(1.8, memoryUsed - 0.12 - Math.random() * 0.2);
+    const cacheUsed = 1.1 + Math.random() * 0.8;
+    const available = Math.max(0.2, 7.7 - memoryUsed - cacheUsed);
+
+    const cpuPercent = `${cpuLoad.toFixed(1)}%`;
+    const cpuValue = systemMonitor.querySelector('[data-cpu-value]');
+    const cpuBar = systemMonitor.querySelector('[data-cpu-bar]');
+    const cpuTemp = systemMonitor.querySelector('[data-cpu-temp]');
+    if (cpuValue) cpuValue.textContent = cpuPercent;
+    if (cpuBar) cpuBar.style.width = `${cpuLoad.toFixed(1)}%`;
+    if (cpuTemp) cpuTemp.textContent = `${Math.round(41 + cpuLoad * 0.28 + Math.random() * 3)}°C`;
+
+    systemMonitor.querySelectorAll('[data-core-index]').forEach((core) => {
+      const load = Math.max(1, Math.min(99, cpuLoad * (0.38 + Math.random() * 0.95) + Math.random() * 11));
+      const bar = core.querySelector('[data-core-bar]');
+      const value = core.querySelector('[data-core-value]');
+      if (bar) bar.style.width = `${load.toFixed(0)}%`;
+      if (value) value.textContent = `${load.toFixed(0)}%`;
+    });
+
+    const usedLabel = systemMonitor.querySelector('[data-memory-used]');
+    const availableLabel = systemMonitor.querySelector('[data-memory-available]');
+    const cacheLabel = systemMonitor.querySelector('[data-memory-cache]');
+    const memoryBar = systemMonitor.querySelector('[data-memory-bar]');
+    if (usedLabel) usedLabel.textContent = memoryUsed.toFixed(1);
+    if (availableLabel) availableLabel.textContent = `${available.toFixed(1)} GiB`;
+    if (cacheLabel) cacheLabel.textContent = `${cacheUsed.toFixed(1)} GiB`;
+    if (memoryBar) memoryBar.style.width = `${(memoryUsed / 7.7 * 100).toFixed(1)}%`;
+
+    const processShares = [0.56, 0.22, 0.08, 0.14];
+    const processMemoryBase = [82, 14, 68, 124];
+    systemMonitor.querySelectorAll('[data-process-index]').forEach((row) => {
+      const index = Number(row.dataset.processIndex);
+      const cpu = row.querySelector('[data-process-cpu]');
+      const memory = row.querySelector('[data-process-memory]');
+      const processLoad = Math.max(0.1, cpuLoad * processShares[index] + Math.random() * 1.1);
+      const processMemory = processMemoryBase[index] + Math.round(memoryUsed * [12, 3, 2, 22][index]);
+      if (cpu) cpu.textContent = `${processLoad.toFixed(1)}%`;
+      if (memory) memory.textContent = `${processMemory}M`;
+    });
+  };
+
+  updateSystemMetrics();
 
   // Complete Virtual File System Tree (VFS)
   const vfs = {
@@ -1388,8 +1755,11 @@ Tags: AWS, Cloud Security, IAM`
   function updatePromptDisplay() {
     const pStr = getPromptStr();
     shellVariables.PWD = '/' + cwd.join('/');
+    if (promptContext) {
+      promptContext.innerHTML = `<span class="terminal-prompt-edge">┌──(</span><span class="terminal-user-name">AkilesTheDark</span><span class="terminal-host-name">㉿nanite-os</span><span class="terminal-prompt-edge">)-[</span><span class="terminal-prompt-path">${escapeHtml(pStr)}</span><span class="terminal-prompt-edge">]</span>`;
+    }
     if (promptLabel) {
-      promptLabel.textContent = `AkilesTheDark@nanite-os:${pStr}$`;
+      promptLabel.textContent = '└─$';
     }
   }
 
@@ -1612,25 +1982,30 @@ Tags: AWS, Cloud Security, IAM`
 
   const openTerminal = () => {
     modal.classList.add('open');
+    document.body.classList.add('terminal-open');
+    updateTerminalClock();
     updatePromptDisplay();
+    updateSystemMetrics();
+    if (!systemMetricsInterval) systemMetricsInterval = window.setInterval(updateSystemMetrics, 1200);
     setTimeout(() => terminalInput.focus(), 150);
   };
 
   const closeTerminal = () => {
     modal.classList.remove('open');
+    document.body.classList.remove('terminal-open');
+    if (systemMetricsInterval) {
+      window.clearInterval(systemMetricsInterval);
+      systemMetricsInterval = null;
+    }
   };
 
   openBtns.forEach(btn => btn.addEventListener('click', openTerminal));
   if (closeBtn) closeBtn.addEventListener('click', closeTerminal);
-
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) closeTerminal();
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) closeTerminal();
   });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('open')) {
-      closeTerminal();
-    }
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && modal.classList.contains('open')) closeTerminal();
   });
 
   // Shell Command Handlers
@@ -1660,16 +2035,16 @@ Tags: AWS, Cloud Security, IAM`
       const node = getNode(targetSegs);
 
       if (!node) {
-        return `<span style="color:#ff4356;">ls: cannot access '${escapeHtml(targetPath)}': No such file or directory</span>`;
+        return `<span style="color:#f2d58c;">ls: cannot access '${escapeHtml(targetPath)}': No such file or directory</span>`;
       }
 
       if (node.type === 'file') {
         return longFormat
-          ? `<div style="font-family:var(--font-mono); font-size:0.8rem;">${node.perms} 1 ${escapeHtml(node.owner)} ${escapeHtml(node.group)} ${escapeHtml(node.size.padStart(6, ' '))} ${escapeHtml(node.date)} <span style="color:#e7dfd3;">${escapeHtml(targetSegs[targetSegs.length - 1])}</span></div>`
-          : `<span style="color:#e7dfd3;">${escapeHtml(targetSegs[targetSegs.length - 1])}</span>`;
+          ? `<div style="font-family:var(--font-mono); font-size:0.8rem;">${node.perms} 1 ${escapeHtml(node.owner)} ${escapeHtml(node.group)} ${escapeHtml(node.size.padStart(6, ' '))} ${escapeHtml(node.date)} <span style="color:#c6c8df;">${escapeHtml(targetSegs[targetSegs.length - 1])}</span></div>`
+          : `<span style="color:#c6c8df;">${escapeHtml(targetSegs[targetSegs.length - 1])}</span>`;
       }
 
-      if (directoriesOnly) return `<span style="color:#ff5964; font-weight:bold;">${escapeHtml(targetPath || '.')}</span>`;
+      if (directoriesOnly) return `<span style="color:#e6bd68; font-weight:bold;">${escapeHtml(targetPath || '.')}</span>`;
       if (recursive) return shellCommands.tree([targetPath]);
 
       const entries = Object.keys(node.entries).sort();
@@ -1678,21 +2053,21 @@ Tags: AWS, Cloud Security, IAM`
       if (visible.length === 0) return '';
 
       if (longFormat) {
-        let lines = [`<div style="color:#8c777d; font-size:0.75rem; margin-bottom:2px;">total ${visible.length * 4}</div>`];
+        let lines = [`<div style="color:#9293b2; font-size:0.75rem; margin-bottom:2px;">total ${visible.length * 4}</div>`];
         for (let name of visible) {
           const item = node.entries[name];
           const isDir = item.type === 'dir';
           const isExec = item.perms && item.perms.includes('x') && !isDir;
-          const color = isDir ? '#ff5964' : (isExec ? '#f6c453' : (name.startsWith('.') ? '#d94b59' : '#e7dfd3'));
+          const color = isDir ? '#e6bd68' : (isExec ? '#91b6ee' : (name.startsWith('.') ? '#aa8234' : '#c6c8df'));
           const suffix = isDir ? '/' : (isExec ? '*' : '');
           const sizeStr = (item.size || '4096').padStart(6, ' ');
 
           lines.push(`
             <div style="font-family:var(--font-mono); font-size:0.8rem; line-height:1.45;">
-              <span style="color:#8c777d;">${escapeHtml(item.perms)}</span>
-              <span style="color:#ff4356;"> 1 ${escapeHtml(item.owner)} ${escapeHtml(item.group)}</span>
-              <span style="color:#f6c453;">${escapeHtml(sizeStr)}</span>
-              <span style="color:#8c777d;"> ${escapeHtml(item.date)} </span>
+              <span style="color:#9293b2;">${escapeHtml(item.perms)}</span>
+              <span style="color:#f2d58c;"> 1 ${escapeHtml(item.owner)} ${escapeHtml(item.group)}</span>
+              <span style="color:#91b6ee;">${escapeHtml(sizeStr)}</span>
+              <span style="color:#9293b2;"> ${escapeHtml(item.date)} </span>
               <span style="color:${color}; font-weight:${isDir ? 'bold' : 'normal'};">${escapeHtml(name)}${suffix}</span>
             </div>
           `);
@@ -1703,7 +2078,7 @@ Tags: AWS, Cloud Security, IAM`
           const item = node.entries[name];
           const isDir = item.type === 'dir';
           const isExec = item.perms && item.perms.includes('x') && !isDir;
-          const color = isDir ? '#ff5964' : (isExec ? '#f6c453' : (name.startsWith('.') ? '#d94b59' : '#e7dfd3'));
+          const color = isDir ? '#e6bd68' : (isExec ? '#91b6ee' : (name.startsWith('.') ? '#aa8234' : '#c6c8df'));
           const suffix = isDir ? '/' : (isExec ? '*' : '');
           return `<span style="color:${color}; font-weight:${isDir ? 'bold' : 'normal'}; margin-right:1.4rem; display:inline-block;">${escapeHtml(name)}${suffix}</span>`;
         });
@@ -1721,10 +2096,10 @@ Tags: AWS, Cloud Security, IAM`
       const node = getNode(targetSegs);
 
       if (!node) {
-        return `<span style="color:#ff4356;">cd: no such file or directory: ${escapeHtml(target)}</span>`;
+        return `<span style="color:#f2d58c;">cd: no such file or directory: ${escapeHtml(target)}</span>`;
       }
       if (node.type !== 'dir') {
-        return `<span style="color:#ff4356;">cd: not a directory: ${escapeHtml(target)}</span>`;
+        return `<span style="color:#f2d58c;">cd: not a directory: ${escapeHtml(target)}</span>`;
       }
 
       previousCwd = [...cwd];
@@ -1736,7 +2111,7 @@ Tags: AWS, Cloud Security, IAM`
     // 3. cat <file...>
     cat: (args, stdin = '') => {
       if (args.length === 0) {
-        return stdin ? outputBlock(stdin) : `<span style="color:#ff4356;">cat: missing operand</span>`;
+        return stdin ? outputBlock(stdin) : `<span style="color:#f2d58c;">cat: missing operand</span>`;
       }
 
       const outputs = [];
@@ -1745,11 +2120,11 @@ Tags: AWS, Cloud Security, IAM`
         const node = getNode(targetSegs);
 
         if (!node) {
-          outputs.push(`<span style="color:#ff4356;">cat: ${escapeHtml(fileArg)}: No such file or directory</span>`);
+          outputs.push(`<span style="color:#f2d58c;">cat: ${escapeHtml(fileArg)}: No such file or directory</span>`);
           continue;
         }
         if (node.type === 'dir') {
-          outputs.push(`<span style="color:#ff4356;">cat: ${escapeHtml(fileArg)}: Is a directory</span>`);
+          outputs.push(`<span style="color:#f2d58c;">cat: ${escapeHtml(fileArg)}: Is a directory</span>`);
           continue;
         }
 
@@ -1757,14 +2132,14 @@ Tags: AWS, Cloud Security, IAM`
           .replace(/&/g, '&amp;')
           .replace(/</g, '&lt;')
           .replace(/>/g, '&gt;');
-        outputs.push(`<pre style="font-family:var(--font-mono); font-size:0.82rem; color:#e7dfd3; margin:0.3rem 0; white-space:pre-wrap; line-height:1.45;">${escaped}</pre>`);
+        outputs.push(`<pre style="font-family:var(--font-mono); font-size:0.82rem; color:#c6c8df; margin:0.3rem 0; white-space:pre-wrap; line-height:1.45;">${escaped}</pre>`);
       }
       return outputs.join('');
     },
 
     // 4. pwd
     pwd: () => {
-      return `<div style="color:#ff5964; font-family:var(--font-mono); font-size:0.83rem;">/${escapeHtml(cwd.join('/'))}</div>`;
+      return `<div style="color:#e6bd68; font-family:var(--font-mono); font-size:0.83rem;">/${escapeHtml(cwd.join('/'))}</div>`;
     },
 
     // 5. tree [path]
@@ -1774,7 +2149,7 @@ Tags: AWS, Cloud Security, IAM`
       const node = getNode(targetSegs);
 
       if (!node || node.type !== 'dir') {
-        return `<span style="color:#ff4356;">tree: '${escapeHtml(targetPath)}': No such directory</span>`;
+        return `<span style="color:#f2d58c;">tree: '${escapeHtml(targetPath)}': No such directory</span>`;
       }
 
       let countDirs = 0;
@@ -1793,13 +2168,13 @@ Tags: AWS, Cloud Security, IAM`
 
           if (item.type === 'dir') {
             countDirs++;
-            lines.push(`<div style="font-family:var(--font-mono); font-size:0.8rem;"><span style="color:#8c777d;">${prefix}${branch}</span><span style="color:#ff5964; font-weight:bold;">${escapeHtml(name)}/</span></div>`);
+            lines.push(`<div style="font-family:var(--font-mono); font-size:0.8rem;"><span style="color:#9293b2;">${prefix}${branch}</span><span style="color:#e6bd68; font-weight:bold;">${escapeHtml(name)}/</span></div>`);
             lines.push(...renderTree(item, nextPrefix));
           } else {
             countFiles++;
             const isExec = item.perms && item.perms.includes('x');
-            const color = isExec ? '#f6c453' : '#e7dfd3';
-            lines.push(`<div style="font-family:var(--font-mono); font-size:0.8rem;"><span style="color:#8c777d;">${prefix}${branch}</span><span style="color:${color};">${escapeHtml(name)}</span></div>`);
+            const color = isExec ? '#91b6ee' : '#c6c8df';
+            lines.push(`<div style="font-family:var(--font-mono); font-size:0.8rem;"><span style="color:#9293b2;">${prefix}${branch}</span><span style="color:${color};">${escapeHtml(name)}</span></div>`);
           }
         }
         return lines;
@@ -1807,9 +2182,9 @@ Tags: AWS, Cloud Security, IAM`
 
       const rootLabel = targetSegs.length === 0 ? '/' : targetSegs[targetSegs.length - 1];
       const treeLines = [
-        `<div style="color:#ff5964; font-weight:bold; font-family:var(--font-mono);">${escapeHtml(rootLabel)}</div>`,
+        `<div style="color:#e6bd68; font-weight:bold; font-family:var(--font-mono);">${escapeHtml(rootLabel)}</div>`,
         ...renderTree(node),
-        `<div style="color:#8c777d; font-size:0.75rem; margin-top:4px;">${countDirs} directories, ${countFiles} files</div>`
+        `<div style="color:#9293b2; font-size:0.75rem; margin-top:4px;">${countDirs} directories, ${countFiles} files</div>`
       ];
 
       return treeLines.join('');
@@ -1817,20 +2192,20 @@ Tags: AWS, Cloud Security, IAM`
 
     // 6. whoami
     whoami: () => `
-<div style="color:#f6c453; font-weight:700;">AkilesTheDark</div>
+<div style="color:#91b6ee; font-weight:700;">AkilesTheDark</div>
 `,
 
     // 7. id
     id: () => `
-<div style="color:#ff5964; font-family:var(--font-mono); font-size:0.82rem;">uid=1000(AkilesTheDark) gid=1000(AkilesTheDark) groups=1000(AkilesTheDark),4(adm),24(cdrom),27(sudo),100(redteam),1337(nanite-core)</div>
+<div style="color:#e6bd68; font-family:var(--font-mono); font-size:0.82rem;">uid=1000(AkilesTheDark) gid=1000(AkilesTheDark) groups=1000(AkilesTheDark),4(adm),24(cdrom),27(sudo),100(redteam),1337(nanite-core)</div>
 `,
 
     // 8. uname [-a]
     uname: (args) => {
       if (args.includes('-a')) {
-        return `<div style="color:#ff5964; font-family:var(--font-mono); font-size:0.82rem;">Linux nanite-os 6.8.0-rex #1 SMP PREEMPT Providence x86_64 GNU/Linux</div>`;
+        return `<div style="color:#e6bd68; font-family:var(--font-mono); font-size:0.82rem;">Linux nanite-os 6.8.0-rex #1 SMP PREEMPT Providence x86_64 GNU/Linux</div>`;
       }
-      return `<div style="color:#ff5964; font-family:var(--font-mono); font-size:0.82rem;">Linux</div>`;
+      return `<div style="color:#e6bd68; font-family:var(--font-mono); font-size:0.82rem;">Linux</div>`;
     },
 
     // 9. echo [text]
@@ -1851,7 +2226,7 @@ Tags: AWS, Cloud Security, IAM`
         else file = args[i];
       }
       const content = stdin || (file ? readVirtualFile(file) : null);
-      if (content === null) return `<span style="color:#ff4356;">head: missing file operand</span>`;
+      if (content === null) return `<span style="color:#f2d58c;">head: missing file operand</span>`;
       return outputBlock(content.split('\n').slice(0, count).join('\n'));
     },
 
@@ -1864,7 +2239,7 @@ Tags: AWS, Cloud Security, IAM`
         else file = args[i];
       }
       const content = stdin || (file ? readVirtualFile(file) : null);
-      if (content === null) return `<span style="color:#ff4356;">tail: missing file operand</span>`;
+      if (content === null) return `<span style="color:#f2d58c;">tail: missing file operand</span>`;
       const lines = content.split('\n');
       return outputBlock(lines.slice(count === 0 ? lines.length : -count).join('\n'));
     },
@@ -1876,13 +2251,13 @@ Tags: AWS, Cloud Security, IAM`
       const invert = args.includes('-v');
       const cleanArgs = args.filter(arg => !['-i', '-n', '-v'].includes(arg));
       const term = cleanArgs[0];
-      if (!term) return `<span style="color:#ff4356;">Usage: grep [-invr] PATTERN [FILE...]</span>`;
+      if (!term) return `<span style="color:#f2d58c;">Usage: grep [-invr] PATTERN [FILE...]</span>`;
       const files = cleanArgs.slice(1);
       let sources = stdin ? [{ name: '', text: stdin }] : files.map(file => ({ name: file, text: readVirtualFile(file) }));
-      if (!sources.length) return `<span style="color:#ff4356;">grep: provide a file or pipe input</span>`;
+      if (!sources.length) return `<span style="color:#f2d58c;">grep: provide a file or pipe input</span>`;
       if (sources.some(source => source.text === null)) {
         const missing = sources.find(source => source.text === null).name;
-        return `<span style="color:#ff4356;">grep: ${escapeHtml(missing)}: No such file</span>`;
+        return `<span style="color:#f2d58c;">grep: ${escapeHtml(missing)}: No such file</span>`;
       }
       const needle = ignoreCase ? term.toLowerCase() : term;
       const matches = [];
@@ -1900,7 +2275,7 @@ Tags: AWS, Cloud Security, IAM`
 
     // 12. date
     date: () => {
-      return `<div style="color:#ff5964; font-family:var(--font-mono); font-size:0.82rem;">${new Date().toUTCString()}</div>`;
+      return `<div style="color:#e6bd68; font-family:var(--font-mono); font-size:0.82rem;">${new Date().toUTCString()}</div>`;
     },
 
     // 13. history
@@ -1918,19 +2293,19 @@ Tags: AWS, Cloud Security, IAM`
     // 15. exit / quit
     exit: () => {
       closeTerminal();
-      return '<span style="color:#8c777d;">Session disengaged.</span>';
+      return '<span style="color:#9293b2;">Session disengaged.</span>';
     },
 
     quit: () => {
       closeTerminal();
-      return '<span style="color:#8c777d;">Session disengaged.</span>';
+      return '<span style="color:#9293b2;">Session disengaged.</span>';
     },
 
     // File creation, movement and permissions operate only inside the virtual filesystem.
     mkdir: (args) => {
       const parents = args.includes('-p');
       const paths = args.filter(arg => arg !== '-p');
-      if (!paths.length) return '<span style="color:#ff4356;">mkdir: missing operand</span>';
+      if (!paths.length) return '<span style="color:#f2d58c;">mkdir: missing operand</span>';
       const errors = [];
       for (const path of paths) {
         const segments = resolvePathSegments(path);
@@ -1954,7 +2329,7 @@ Tags: AWS, Cloud Security, IAM`
 
     touch: (args) => {
       const paths = args.filter(arg => !arg.startsWith('-'));
-      if (!paths.length) return '<span style="color:#ff4356;">touch: missing file operand</span>';
+      if (!paths.length) return '<span style="color:#f2d58c;">touch: missing file operand</span>';
       const errors = [];
       for (const path of paths) {
         const { parent, name } = getParentNode(path);
@@ -1971,7 +2346,7 @@ Tags: AWS, Cloud Security, IAM`
       const recursive = /r/i.test(flags);
       const force = flags.includes('f');
       const paths = args.filter(arg => !arg.startsWith('-'));
-      if (!paths.length) return '<span style="color:#ff4356;">rm: missing operand</span>';
+      if (!paths.length) return '<span style="color:#f2d58c;">rm: missing operand</span>';
       const errors = [];
       for (const path of paths) {
         const segments = resolvePathSegments(path);
@@ -1992,38 +2367,38 @@ Tags: AWS, Cloud Security, IAM`
     cp: (args) => {
       const recursive = args.some(arg => arg === '-r' || arg === '-R');
       const paths = args.filter(arg => !arg.startsWith('-'));
-      if (paths.length < 2) return '<span style="color:#ff4356;">cp: usage: cp [-r] SOURCE DEST</span>';
+      if (paths.length < 2) return '<span style="color:#f2d58c;">cp: usage: cp [-r] SOURCE DEST</span>';
       const source = getNode(resolvePathSegments(paths[0]));
-      if (!source) return `<span style="color:#ff4356;">cp: '${escapeHtml(paths[0])}': No such file or directory</span>`;
-      if (source.type === 'dir' && !recursive) return '<span style="color:#ff4356;">cp: omitting directory (use -r)</span>';
+      if (!source) return `<span style="color:#f2d58c;">cp: '${escapeHtml(paths[0])}': No such file or directory</span>`;
+      if (source.type === 'dir' && !recursive) return '<span style="color:#f2d58c;">cp: omitting directory (use -r)</span>';
       let destination = resolvePathSegments(paths[1]);
       const destNode = getNode(destination);
       if (destNode?.type === 'dir') destination = [...destination, paths[0].split('/').filter(Boolean).pop()];
       const sourceSegments = resolvePathSegments(paths[0]);
-      if (source.type === 'dir' && destination.length > sourceSegments.length && sourceSegments.every((part, index) => destination[index] === part)) return '<span style="color:#ff4356;">cp: cannot copy a directory into itself</span>';
+      if (source.type === 'dir' && destination.length > sourceSegments.length && sourceSegments.every((part, index) => destination[index] === part)) return '<span style="color:#f2d58c;">cp: cannot copy a directory into itself</span>';
       const name = destination.pop();
       const parent = getNode(destination);
-      if (!parent || parent.type !== 'dir') return `<span style="color:#ff4356;">cp: cannot create '${escapeHtml(paths[1])}': No such directory</span>`;
+      if (!parent || parent.type !== 'dir') return `<span style="color:#f2d58c;">cp: cannot create '${escapeHtml(paths[1])}': No such directory</span>`;
       parent.entries[name] = JSON.parse(JSON.stringify(source));
       return '';
     },
 
     mv: (args) => {
       const paths = args.filter(arg => !arg.startsWith('-'));
-      if (paths.length < 2) return '<span style="color:#ff4356;">mv: usage: mv SOURCE DEST</span>';
+      if (paths.length < 2) return '<span style="color:#f2d58c;">mv: usage: mv SOURCE DEST</span>';
       const sourceSegments = resolvePathSegments(paths[0]);
-      if (!sourceSegments.length) return '<span style="color:#ff4356;">mv: refusing to move root</span>';
+      if (!sourceSegments.length) return '<span style="color:#f2d58c;">mv: refusing to move root</span>';
       const sourceInfo = getParentNode(paths[0]);
       const source = sourceInfo.parent?.entries?.[sourceInfo.name];
-      if (!source) return `<span style="color:#ff4356;">mv: cannot stat '${escapeHtml(paths[0])}': No such file</span>`;
+      if (!source) return `<span style="color:#f2d58c;">mv: cannot stat '${escapeHtml(paths[0])}': No such file</span>`;
       let destination = resolvePathSegments(paths[1]);
       if (getNode(destination)?.type === 'dir') destination.push(sourceInfo.name);
       if (sourceSegments.join('/') === destination.join('/')) return '';
-      if (source.type === 'dir' && destination.length > sourceSegments.length && sourceSegments.every((part, index) => destination[index] === part)) return '<span style="color:#ff4356;">mv: cannot move a directory into itself</span>';
+      if (source.type === 'dir' && destination.length > sourceSegments.length && sourceSegments.every((part, index) => destination[index] === part)) return '<span style="color:#f2d58c;">mv: cannot move a directory into itself</span>';
       const name = destination.pop();
       const parent = getNode(destination);
-      if (!parent || parent.type !== 'dir') return `<span style="color:#ff4356;">mv: cannot move to '${escapeHtml(paths[1])}': No such directory</span>`;
-      if (source.type === 'dir' && cwd.length >= sourceSegments.length && sourceSegments.every((part, index) => cwd[index] === part)) return '<span style="color:#ff4356;">mv: cannot move the current working directory</span>';
+      if (!parent || parent.type !== 'dir') return `<span style="color:#f2d58c;">mv: cannot move to '${escapeHtml(paths[1])}': No such directory</span>`;
+      if (source.type === 'dir' && cwd.length >= sourceSegments.length && sourceSegments.every((part, index) => cwd[index] === part)) return '<span style="color:#f2d58c;">mv: cannot move the current working directory</span>';
       parent.entries[name] = source;
       delete sourceInfo.parent.entries[sourceInfo.name];
       return '';
@@ -2031,7 +2406,7 @@ Tags: AWS, Cloud Security, IAM`
 
     chmod: (args) => {
       const paths = [...args];
-      if (paths.length < 2) return '<span style="color:#ff4356;">chmod: usage: chmod MODE FILE</span>';
+      if (paths.length < 2) return '<span style="color:#f2d58c;">chmod: usage: chmod MODE FILE</span>';
       const mode = paths.shift();
       const errors = [];
       for (const path of paths) {
@@ -2070,7 +2445,7 @@ Tags: AWS, Cloud Security, IAM`
       if (positional.length) start = positional[0];
       const startSegments = resolvePathSegments(start);
       const startNode = getNode(startSegments);
-      if (!startNode) return `<span style="color:#ff4356;">find: '${escapeHtml(start)}': No such file or directory</span>`;
+      if (!startNode) return `<span style="color:#f2d58c;">find: '${escapeHtml(start)}': No such file or directory</span>`;
       const matcher = new RegExp('^' + namePattern.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.') + '$');
       const results = [];
       if (matcher.test(startSegments.at(-1) || '/')) results.push('/' + startSegments.join('/'));
@@ -2082,18 +2457,18 @@ Tags: AWS, Cloud Security, IAM`
 
     stat: (args) => {
       const path = args[0];
-      if (!path) return '<span style="color:#ff4356;">stat: missing operand</span>';
+      if (!path) return '<span style="color:#f2d58c;">stat: missing operand</span>';
       const segments = resolvePathSegments(path);
       const node = getNode(segments);
-      if (!node) return `<span style="color:#ff4356;">stat: cannot stat '${escapeHtml(path)}'</span>`;
+      if (!node) return `<span style="color:#f2d58c;">stat: cannot stat '${escapeHtml(path)}'</span>`;
       return outputBlock(`  File: ${path}\n  Type: ${node.type}\n  Size: ${node.size}\nAccess: (${node.perms})  Uid: (${node.owner})  Gid: (${node.group})\nModify: ${node.date}`);
     },
 
     file: (args) => {
       const path = args[0];
-      if (!path) return '<span style="color:#ff4356;">file: missing operand</span>';
+      if (!path) return '<span style="color:#f2d58c;">file: missing operand</span>';
       const node = getNode(resolvePathSegments(path));
-      if (!node) return `<span style="color:#ff4356;">${escapeHtml(path)}: cannot open</span>`;
+      if (!node) return `<span style="color:#f2d58c;">${escapeHtml(path)}: cannot open</span>`;
       return outputBlock(`${path}: ${node.type === 'dir' ? 'directory' : /\.\w+$/.test(path) ? path.split('.').pop().toUpperCase() + ' text' : 'regular text file'}`);
     },
 
@@ -2101,8 +2476,8 @@ Tags: AWS, Cloud Security, IAM`
     wc: (args, stdin = '') => {
       const flags = args.filter(arg => arg.startsWith('-')).join('');
       const input = collectTextInput(args, stdin);
-      if (input.error) return `<span style="color:#ff4356;">wc: ${escapeHtml(input.error)}</span>`;
-      if (input.text === null) return '<span style="color:#ff4356;">wc: missing operand</span>';
+      if (input.error) return `<span style="color:#f2d58c;">wc: ${escapeHtml(input.error)}</span>`;
+      if (input.text === null) return '<span style="color:#f2d58c;">wc: missing operand</span>';
       const lines = input.text ? input.text.split('\n').length : 0;
       const words = input.text.trim() ? input.text.trim().split(/\s+/).length : 0;
       const bytes = new Blob([input.text]).size;
@@ -2115,8 +2490,8 @@ Tags: AWS, Cloud Security, IAM`
 
     sort: (args, stdin = '') => {
       const input = collectTextInput(args, stdin);
-      if (input.error) return `<span style="color:#ff4356;">sort: ${escapeHtml(input.error)}</span>`;
-      if (input.text === null) return '<span style="color:#ff4356;">sort: provide a file or pipe input</span>';
+      if (input.error) return `<span style="color:#f2d58c;">sort: ${escapeHtml(input.error)}</span>`;
+      if (input.text === null) return '<span style="color:#f2d58c;">sort: provide a file or pipe input</span>';
       const reverse = args.includes('-r');
       const numeric = args.includes('-n');
       const lines = input.text.split('\n').sort(numeric ? (a, b) => Number(a) - Number(b) : undefined);
@@ -2126,8 +2501,8 @@ Tags: AWS, Cloud Security, IAM`
 
     uniq: (args, stdin = '') => {
       const input = collectTextInput(args, stdin);
-      if (input.error) return `<span style="color:#ff4356;">uniq: ${escapeHtml(input.error)}</span>`;
-      if (input.text === null) return '<span style="color:#ff4356;">uniq: provide a file or pipe input</span>';
+      if (input.error) return `<span style="color:#f2d58c;">uniq: ${escapeHtml(input.error)}</span>`;
+      if (input.text === null) return '<span style="color:#f2d58c;">uniq: provide a file or pipe input</span>';
       const count = args.includes('-c');
       const output = [];
       for (const line of input.text.split('\n')) {
@@ -2144,10 +2519,10 @@ Tags: AWS, Cloud Security, IAM`
         if (args[i] === '-d' && args[i + 1]) delimiter = args[++i];
         else if (args[i] === '-f' && args[i + 1]) fieldSpec = args[++i];
       }
-      if (!fieldSpec) return '<span style="color:#ff4356;">cut: usage: cut -d DELIMITER -f FIELDS [FILE]</span>';
+      if (!fieldSpec) return '<span style="color:#f2d58c;">cut: usage: cut -d DELIMITER -f FIELDS [FILE]</span>';
       const input = collectTextInput(stdin ? [] : args.slice(-1), stdin);
-      if (input.error) return `<span style="color:#ff4356;">cut: ${escapeHtml(input.error)}</span>`;
-      if (input.text === null) return '<span style="color:#ff4356;">cut: provide a file or pipe input</span>';
+      if (input.error) return `<span style="color:#f2d58c;">cut: ${escapeHtml(input.error)}</span>`;
+      if (input.text === null) return '<span style="color:#f2d58c;">cut: provide a file or pipe input</span>';
       const indexes = fieldSpec.split(',').map(field => Number(field) - 1).filter(index => index >= 0);
       return outputBlock(input.text.split('\n').map(line => line.split(delimiter).filter((_, index) => indexes.includes(index)).join(delimiter)).join('\n'));
     },
@@ -2157,8 +2532,8 @@ Tags: AWS, Cloud Security, IAM`
       const sets = deleteMode ? args.slice(1, 2) : args.slice(0, 2);
       let input = stdin;
       if (!input && args.length > (deleteMode ? 2 : 2)) input = readVirtualFile(args.at(-1));
-      if (input === null) return '<span style="color:#ff4356;">tr: cannot read input file</span>';
-      if (sets.length < 1 || (!deleteMode && sets.length < 2)) return '<span style="color:#ff4356;">tr: usage: tr [-d] SET1 [SET2]</span>';
+      if (input === null) return '<span style="color:#f2d58c;">tr: cannot read input file</span>';
+      if (sets.length < 1 || (!deleteMode && sets.length < 2)) return '<span style="color:#f2d58c;">tr: usage: tr [-d] SET1 [SET2]</span>';
       const from = [...sets[0]];
       if (deleteMode) return outputBlock([...input].filter(char => !from.includes(char)).join(''));
       const to = [...sets[1]];
@@ -2170,19 +2545,19 @@ Tags: AWS, Cloud Security, IAM`
 
     rev: (args, stdin = '') => {
       const input = collectTextInput(args, stdin);
-      if (input.error) return `<span style="color:#ff4356;">rev: ${escapeHtml(input.error)}</span>`;
-      if (input.text === null) return '<span style="color:#ff4356;">rev: provide a file or pipe input</span>';
+      if (input.error) return `<span style="color:#f2d58c;">rev: ${escapeHtml(input.error)}</span>`;
+      if (input.text === null) return '<span style="color:#f2d58c;">rev: provide a file or pipe input</span>';
       return outputBlock(input.text.split('\n').map(line => [...line].reverse().join('')).join('\n'));
     },
 
     sed: (args, stdin = '') => {
       const expression = args.find(arg => /^s\/.*\/.*\/[gim]*$/.test(arg));
-      if (!expression) return '<span style="color:#ff4356;">sed: supported form: sed s/old/new/g FILE</span>';
+      if (!expression) return '<span style="color:#f2d58c;">sed: supported form: sed s/old/new/g FILE</span>';
       const match = expression.match(/^s\/(.*)\/(.*)\/([gim]*)$/);
       const [, search, replacement, flags = ''] = match;
       const input = collectTextInput(args.filter(arg => arg !== expression), stdin);
-      if (input.error) return `<span style="color:#ff4356;">sed: ${escapeHtml(input.error)}</span>`;
-      if (input.text === null) return '<span style="color:#ff4356;">sed: provide a file or pipe input</span>';
+      if (input.error) return `<span style="color:#f2d58c;">sed: ${escapeHtml(input.error)}</span>`;
+      if (input.text === null) return '<span style="color:#f2d58c;">sed: provide a file or pipe input</span>';
       const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       return outputBlock(input.text.replace(new RegExp(escapedSearch, flags), replacement));
     },
@@ -2200,11 +2575,11 @@ Tags: AWS, Cloud Security, IAM`
 
     seq: (args) => {
       const nums = args.map(Number);
-      if (!nums.length || nums.some(value => !Number.isFinite(value))) return '<span style="color:#ff4356;">seq: usage: seq [FIRST [INCREMENT]] LAST</span>';
+      if (!nums.length || nums.some(value => !Number.isFinite(value))) return '<span style="color:#f2d58c;">seq: usage: seq [FIRST [INCREMENT]] LAST</span>';
       const first = nums.length === 1 ? 1 : nums[0];
       const increment = nums.length === 3 ? nums[1] : 1;
       const last = nums.length === 1 ? nums[0] : nums.at(-1);
-      if (!increment || Math.abs((last - first) / increment) > 1000) return '<span style="color:#ff4356;">seq: invalid or excessive range</span>';
+      if (!increment || Math.abs((last - first) / increment) > 1000) return '<span style="color:#f2d58c;">seq: invalid or excessive range</span>';
       const output = [];
       for (let value = first; increment > 0 ? value <= last : value >= last; value += increment) output.push(value);
       return outputBlock(output.join('\n'));
@@ -2219,7 +2594,7 @@ Tags: AWS, Cloud Security, IAM`
     realpath: (args) => {
       if (!args[0]) return outputBlock(`/${cwd.join('/')}`);
       const path = resolvePathSegments(args[0]);
-      return getNode(path) ? outputBlock('/' + path.join('/')) : `<span style="color:#ff4356;">realpath: '${escapeHtml(args[0])}': No such file</span>`;
+      return getNode(path) ? outputBlock('/' + path.join('/')) : `<span style="color:#f2d58c;">realpath: '${escapeHtml(args[0])}': No such file</span>`;
     },
     hostname: () => outputBlock('nanite-os'),
     uptime: () => outputBlock(` ${Math.floor(performance.now() / 1000)}s  up 1 user,  load average: 0.08, 0.12, 0.09`),
@@ -2239,7 +2614,7 @@ Tags: AWS, Cloud Security, IAM`
       return '';
     },
     which: (args) => {
-      if (!args.length) return '<span style="color:#ff4356;">which: missing command name</span>';
+      if (!args.length) return '<span style="color:#f2d58c;">which: missing command name</span>';
       const missing = args.filter(name => !Object.prototype.hasOwnProperty.call(shellCommands, name) && !vfs.entries.bin.entries[name]);
       return outputBlock(args.filter(name => !missing.includes(name)).map(name => vfs.entries.bin.entries[name] ? `/bin/${name}` : `/usr/bin/${name}`).concat(missing.map(name => `${name} not found`)).join('\n'));
     },
@@ -2247,8 +2622,8 @@ Tags: AWS, Cloud Security, IAM`
     free: () => outputBlock('              total        used        free      shared  buff/cache   available\nMem:           7.7Gi       2.1Gi       3.8Gi       128Mi       1.8Gi       5.2Gi\nSwap:          2.0Gi          0B       2.0Gi'),
     ps: () => outputBlock('  PID TTY          TIME CMD\n    1 ?        00:00:02 systemd\n  412 pts/0    00:00:00 bash\n  581 pts/0    00:00:00 nanite-monitor\n  620 pts/0    00:00:00 ps'),
     top: () => outputBlock('Nanite OS process monitor (snapshot)\nTasks: 42 total, 1 running, 41 sleeping\n%Cpu(s):  2.4 us,  1.1 sy, 96.5 id\nMiB Mem:  7892.0 total, 2134.0 used, 3750.0 free\n\n  PID USER      %CPU %MEM COMMAND\n  581 AkilesTheDark    1.2  0.8 nanite-monitor\n  412 AkilesTheDark    0.3  0.1 bash'),
-    ping: (args) => args.length ? outputBlock(`PING ${args.at(-1)} (simulation)\nNetwork access is disabled in this browser terminal.\n\n--- ${args.at(-1)} ping statistics ---\n4 packets transmitted, 0 received, 100% packet loss`) : '<span style="color:#ff4356;">ping: missing host operand</span>',
-    curl: (args) => args.length ? outputBlock('Network requests are disabled in this browser terminal. Use the virtual filesystem to inspect local profile data.') : '<span style="color:#ff4356;">curl: try curl URL</span>',
+    ping: (args) => args.length ? outputBlock(`PING ${args.at(-1)} (simulation)\nNetwork access is disabled in this browser terminal.\n\n--- ${args.at(-1)} ping statistics ---\n4 packets transmitted, 0 received, 100% packet loss`) : '<span style="color:#f2d58c;">ping: missing host operand</span>',
+    curl: (args) => args.length ? outputBlock('Network requests are disabled in this browser terminal. Use the virtual filesystem to inspect local profile data.') : '<span style="color:#f2d58c;">curl: try curl URL</span>',
     man: () => shellCommands.help(),
     reset: () => { terminalOutput.innerHTML = ''; return ''; },
 
@@ -2256,8 +2631,8 @@ Tags: AWS, Cloud Security, IAM`
     overdrive: () => {
       const newState = window.GeneratorRexEngine.toggleOverdrive();
       return `
-<div style="color:#f6c453; font-weight:700;">// NANITE OVERDRIVE MODE: ${newState ? 'ENGAGED [MAX SURGE]' : 'DISENGAGED [STANDARD]'}</div>
-<div>Nanite cores shifted to ${newState ? '#f6c453 (Blazing Amber)' : '#ff5964 (Signal Red)'}.</div>
+<div style="color:#91b6ee; font-weight:700;">// NANITE OVERDRIVE MODE: ${newState ? 'ENGAGED [MAX SURGE]' : 'DISENGAGED [STANDARD]'}</div>
+<div>Nanite cores shifted to ${newState ? '#91b6ee (Blazing Amber)' : '#e6bd68 (Signal Red)'}.</div>
 <div>Gear rotation velocity ${newState ? 'accelerated to 2.4x with increased mesh spark rate' : 'normalized to nominal baseline'}.</div>
 `;
     },
@@ -2265,9 +2640,9 @@ Tags: AWS, Cloud Security, IAM`
     nanites: () => {
       const isOD = window.GeneratorRexEngine.isOverdrive;
       return `
-<div style="color:#ff5964; font-weight:700;">// NANITE SWARM TELEMETRY &mdash; PROVIDENCE SUITE</div>
+<div style="color:#e6bd68; font-weight:700;">// NANITE SWARM TELEMETRY &mdash; PROVIDENCE SUITE</div>
 <div>* Swarm Density:      100% [Nominal Swarm Active]</div>
-<div>* Mode:               <span style="color:${isOD ? '#f6c453' : '#ff5964'}; font-weight:bold;">${isOD ? 'REX OVERDRIVE [100% SURGE]' : 'PROVIDENCE [STANDARD TECH]'}</span></div>
+<div>* Mode:               <span style="color:${isOD ? '#91b6ee' : '#e6bd68'}; font-weight:bold;">${isOD ? 'REX OVERDRIVE [100% SURGE]' : 'PROVIDENCE [STANDARD TECH]'}</span></div>
 <div>* Body:               Glass-encased golden orb</div>
 <div>* Rods:               6 dark spikes with varied lengths</div>
 <div>* Electrical State:   Intermittent red-gold crackle</div>
@@ -2277,7 +2652,7 @@ Tags: AWS, Cloud Security, IAM`
     },
 
     gears: () => `
-<div style="color:#ff5964; font-weight:700;">// MECHANICAL GEAR &amp; PISTON TELEMETRY</div>
+<div style="color:#e6bd68; font-weight:700;">// MECHANICAL GEAR &amp; PISTON TELEMETRY</div>
 <div>* Cluster A (Slam Cannon):  24T / 14T / 8T Involute Spur Train [Ratio 1:3.0]</div>
 <div>* Cluster B (Punk Busters): 20T / 12T Heavy Crank Gear + Live Reciprocating Piston</div>
 <div>* Piston Stroke:            64mm displacement @ 4,800 PSI hydraulic rating</div>
@@ -2286,11 +2661,11 @@ Tags: AWS, Cloud Security, IAM`
 `,
 
     scan: () => `
-<div style="color:#ff5964; font-weight:700;">// PROVIDENCE MOLECULAR SCANNING SEQUENCE</div>
+<div style="color:#e6bd68; font-weight:700;">// PROVIDENCE MOLECULAR SCANNING SEQUENCE</div>
 <div>[========================================] 100% SCAN COMPLETE</div>
-<div>* Foreign EVO Mutagens:   <span style="color:#f6c453;">NONE DETECTED (0.00%)</span></div>
-<div>* Nanite Cohesion:         <span style="color:#f6c453;">99.8% STABLE</span></div>
-<div>* Omega-1 Nanite Presence: <span style="color:#f6c453;">ACTIVE // DORMANT RECEPTORS READY</span></div>
+<div>* Foreign EVO Mutagens:   <span style="color:#91b6ee;">NONE DETECTED (0.00%)</span></div>
+<div>* Nanite Cohesion:         <span style="color:#91b6ee;">99.8% STABLE</span></div>
+<div>* Omega-1 Nanite Presence: <span style="color:#91b6ee;">ACTIVE // DORMANT RECEPTORS READY</span></div>
 <div>* Threat Classification:   SECURE // OPERATOR AkilesTheDark AUTHORIZED</div>
 `,
 
@@ -2356,14 +2731,14 @@ SHELL FEATURES
     const pStr = getPromptStr();
     const cmdLine = document.createElement('div');
     cmdLine.className = 'terminal-line';
-    cmdLine.innerHTML = `<span style="color:#f6c453;">AkilesTheDark@nanite-os:${escapeHtml(pStr)}$</span> <span style="color:#fff;">${escapeHtml(trimmed)}</span>`;
+    cmdLine.innerHTML = `<div class="terminal-prompt-context"><span class="terminal-prompt-edge">┌──(</span><span class="terminal-user-name">AkilesTheDark</span><span class="terminal-host-name">㉿nanite-os</span><span class="terminal-prompt-edge">)-[</span><span class="terminal-prompt-path">${escapeHtml(pStr)}</span><span class="terminal-prompt-edge">]</span></div><div class="terminal-prompt-row"><span class="terminal-prompt-user">└─$</span> <span class="terminal-command-text">${escapeHtml(trimmed)}</span></div>`;
     terminalOutput.appendChild(cmdLine);
 
     const parsed = parseShellLine(trimmed);
     if (parsed.error) {
       const errorLine = document.createElement('div');
       errorLine.className = 'terminal-line';
-      errorLine.innerHTML = `<span style="color:#ff4356;">${escapeHtml(parsed.error)}</span>`;
+      errorLine.innerHTML = `<span style="color:#f2d58c;">${escapeHtml(parsed.error)}</span>`;
       terminalOutput.appendChild(errorLine);
       lastExitStatus = 2;
     } else {
@@ -2377,7 +2752,7 @@ SHELL FEATURES
         if (group.redirect?.mode === '<') {
           const redirectedInput = readVirtualFile(group.redirect.path);
           if (redirectedInput === null) {
-            finalOutput = `<span style="color:#ff4356;">${escapeHtml(group.redirect.path)}: No such file</span>`;
+            finalOutput = `<span style="color:#f2d58c;">${escapeHtml(group.redirect.path)}: No such file</span>`;
             status = 1;
           } else stdin = redirectedInput;
         }
@@ -2389,7 +2764,7 @@ SHELL FEATURES
             const cmd = expanded[0].toLowerCase();
             const args = expanded.slice(1);
             if (!Object.prototype.hasOwnProperty.call(shellCommands, cmd)) {
-              finalOutput = `<span style="color:#ff4356;">bash: ${escapeHtml(cmd)}: command not found. Type <span style="color:#ff5964;">help</span> for available commands.</span>`;
+              finalOutput = `<span style="color:#f2d58c;">bash: ${escapeHtml(cmd)}: command not found. Type <span style="color:#e6bd68;">help</span> for available commands.</span>`;
               stdin = htmlToText(finalOutput);
               status = 127;
               continue;
@@ -2415,7 +2790,7 @@ SHELL FEATURES
             if (redirectError) {
               const errorLine = document.createElement('div');
               errorLine.className = 'terminal-line';
-              errorLine.innerHTML = `<span style="color:#ff4356;">${escapeHtml(redirectError)}</span>`;
+              errorLine.innerHTML = `<span style="color:#f2d58c;">${escapeHtml(redirectError)}</span>`;
               terminalOutput.appendChild(errorLine);
               status = 1;
             }
@@ -2450,7 +2825,7 @@ SHELL FEATURES
       terminalInput.value = '';
       const cancelLine = document.createElement('div');
       cancelLine.className = 'terminal-line';
-      cancelLine.innerHTML = `<span style="color:#f6c453;">${escapeHtml(promptLabel?.textContent || 'AkilesTheDark@nanite-os:~$')}</span> ${escapeHtml(interrupted)} <span style="color:#ff4356;">^C</span>`;
+      cancelLine.innerHTML = `<span style="color:#91b6ee;">${escapeHtml(promptLabel?.textContent || 'AkilesTheDark@nanite-os:~$')}</span> ${escapeHtml(interrupted)} <span style="color:#f2d58c;">^C</span>`;
       terminalOutput.appendChild(cancelLine);
       return;
     }
