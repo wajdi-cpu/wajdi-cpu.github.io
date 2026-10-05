@@ -35,12 +35,45 @@ window.GeneratorRexEngine = {
 
 document.addEventListener('DOMContentLoaded', () => {
   initHomeBootSequence();
-  initNaniteAndGearCanvas();
   initMechanicalTypewriter();
   initDockNavigation();
+  initCursorAfterNavigation();
   initOverdriveToggle();
   initCyberTerminal();
 });
+
+function initCursorAfterNavigation() {
+  let lastPointerPosition = null;
+
+  document.addEventListener('mousemove', event => {
+    lastPointerPosition = { x: event.clientX, y: event.clientY };
+  }, { passive: true });
+
+  window.addEventListener('pagehide', () => {
+    if (!lastPointerPosition) return;
+    try {
+      sessionStorage.setItem('ds3-cursor-position', JSON.stringify(lastPointerPosition));
+    } catch (_) { /* Cursor styling still works when storage is unavailable. */ }
+  });
+
+  window.addEventListener('pageshow', () => {
+    let position = lastPointerPosition;
+    try {
+      position = position || JSON.parse(sessionStorage.getItem('ds3-cursor-position') || 'null');
+    } catch (_) { /* Fall back to applying the cursor to the page body. */ }
+
+    const target = position && position.x >= 0 && position.y >= 0
+      ? document.elementFromPoint(position.x, position.y)
+      : null;
+    const cursorTarget = target || document.body;
+    cursorTarget.style.setProperty('cursor', 'none', 'important');
+    void cursorTarget.offsetWidth;
+
+    requestAnimationFrame(() => {
+      cursorTarget.style.setProperty('cursor', 'url("./assets/cursor-normal.png") 0 0, auto', 'important');
+    });
+  });
+}
 
 function initHomeBootSequence() {
   const bootScreen = document.getElementById('boot-screen');
@@ -1118,50 +1151,7 @@ function initMechanicalTypewriter() {
   const el = document.getElementById('typewriter-text');
   if (!el) return;
 
-  const phrases = [
-    'NANITES: ONLINE // Digging below the abstraction layer',
-    'RED TEAM OPERATOR // Web penetration testing & CTFs',
-    'ACTIVE DIRECTORY // Kerberoasting, DCSync & bloodhound',
-    'REVERSE ENGINEERING // System internals & ELF/PE analysis',
-    'CLOUD PENTESTING // AWS & Azure IAM vulnerability research'
-  ];
-
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    el.textContent = phrases[0];
-    return;
-  }
-
-  let phraseIndex = 0;
-  let charIndex = 0;
-  let isDeleting = false;
-  let typingSpeed = 75;
-
-  function type() {
-    const current = phrases[phraseIndex];
-
-    if (isDeleting) {
-      el.textContent = current.substring(0, charIndex - 1);
-      charIndex--;
-      typingSpeed = 40;
-    } else {
-      el.textContent = current.substring(0, charIndex + 1);
-      charIndex++;
-      typingSpeed = 75;
-    }
-
-    if (!isDeleting && charIndex === current.length) {
-      typingSpeed = 4000;
-      isDeleting = true;
-    } else if (isDeleting && charIndex === 0) {
-      isDeleting = false;
-      phraseIndex = (phraseIndex + 1) % phrases.length;
-      typingSpeed = 350;
-    }
-
-    setTimeout(type, typingSpeed);
-  }
-
-  type();
+  el.textContent = 'NANITES: ONLINE // Digging below the abstraction layer';
 }
 
 /* ==========================================================================
@@ -1986,7 +1976,6 @@ Tags: AWS, Cloud Security, IAM`
     updateTerminalClock();
     updatePromptDisplay();
     updateSystemMetrics();
-    if (!systemMetricsInterval) systemMetricsInterval = window.setInterval(updateSystemMetrics, 1200);
     setTimeout(() => terminalInput.focus(), 150);
   };
 
