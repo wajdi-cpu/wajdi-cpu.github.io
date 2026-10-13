@@ -1,6 +1,48 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Linking the Fire</title><link rel="icon" type="image/png" href="assets/bonfire.png"><link rel="stylesheet" href="style.css"></head><body style="--page-bg:url('assets/trial.gif');--challenge-bg:url('assets/trial.gif')"><main class="wrap"><section class="cinema"><h1 class="page-title">LINKING THE FIRE</h1><p class="meta" style="color:#c9a84c">A CYBER CHALLENGE</p><p class="quote">“The fire fades, and the Lords go without thrones.<br>The beacons shall be lit. The flame must be linked.”</p><p>To link the fire, one must walk the path of the Unkindled.<br>Prove your worth across the Four Cinders below.</p></section><div class="progress"><p class="soul-count">SOULS COLLECTED: 0 / 4 CINDERS LINKED</p><div class="progressbar"></div><span>0%</span></div><div class="grid">
-<article class="card boss challenge-card"><span class="skull">☠</span><h2>SEATH THE SCALELESS</h2><div class="meta">LORD OF OSINT & RECONNAISSANCE</div><hr class="rule"><p class="meta">DIFFICULTY: ☠☠☠░░<br>STATUS: <span class="status">🔒 SEALED</span></p><p><i>“In his archives, all secrets rest. Find what he has hidden.”</i></p><button class="btn attempt">ATTEMPT CHALLENGE</button><div class="riddle"><p>By my name the dragon of Lordran is known. Type the archivist's name to kindle this cinder.</p><input class="answer" data-answer="seath" placeholder="Your answer" aria-label="Challenge answer"></div></article>
-<article class="card boss challenge-card"><span class="skull">☠</span><h2>NITO, FIRST OF THE DEAD</h2><div class="meta">LORD OF CRYPTOGRAPHY</div><hr class="rule"><p class="meta">DIFFICULTY: ☠☠☠☠░<br>STATUS: <span class="status">🔒 SEALED</span></p><p><i>“A message sleeps among the bones. Turn each letter back by one: <b>UFTU</b>.”</i></p><button class="btn attempt">ATTEMPT CHALLENGE</button><div class="riddle"><p>Enter the decoded word.</p><input class="answer" data-answer="test" placeholder="Your answer" aria-label="Challenge answer"></div></article>
-<article class="card boss challenge-card"><span class="skull">☠</span><h2>WITCH OF IZALITH</h2><div class="meta">LORD OF WEB EXPLOITATION</div><hr class="rule"><p class="meta">DIFFICULTY: ☠☠☠░░<br>STATUS: <span class="status">🔒 SEALED</span></p><p><i>“A web of paths curls around the flame. Name the first page most web servers seek.”</i></p><button class="btn attempt">ATTEMPT CHALLENGE</button><div class="riddle"><p>Enter the common default page filename (without extension).</p><input class="answer" data-answer="index" placeholder="Your answer" aria-label="Challenge answer"></div></article>
-<article class="card boss challenge-card"><span class="skull">☠</span><h2>THE FOUR KINGS</h2><div class="meta">LORDS OF REVERSE ENGINEERING</div><hr class="rule"><p class="meta">DIFFICULTY: ☠☠☠☠☠<br>STATUS: <span class="status">🔒 SEALED</span></p><p><i>“A binary speaks in hexadecimal. What is the ASCII character for 41?”</i></p><button class="btn attempt">ATTEMPT CHALLENGE</button><div class="riddle"><p>Enter the decoded character.</p><input class="answer" data-answer="a" placeholder="Your answer" aria-label="Challenge answer"></div></article>
-</div><button class="btn firelink">LINK THE FIRE</button><div class="final-flame"><img src="assets/bonfire.png" alt="bonfire" style="width: 28px; height: 28px; object-fit: contain; vertical-align: middle;"></div></main><script src="script.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Linking the Fire</title>
+<link rel="icon" type="image/png" href="assets/bonfire.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body style="--page-bg:url('assets/trial.gif');--challenge-bg:url('assets/trial.gif')">
+<main class="wrap">
+<section class="cinema">
+<h1 class="page-title">LINKING THE FIRE</h1>
+<p class="page-subtitle">CTF Challenge</p>
+<p class="meta" style="color:#c9a84c">A CYBER CHALLENGE</p>
+<p class="quote">“The fire fades, and the Lords go without thrones.<br>The beacons shall be lit. The flame must be linked.”</p>
+<p>To link the fire, one must walk the path of the Unkindled.<br>Prove your worth across the Four Cinders below.</p>
+</section>
+<div class="progress"><p class="soul-count">SOULS COLLECTED: 0 / 4 CINDERS LINKED</p><div class="progressbar"></div><span>0%</span></div>
+<div class="timeline-wrapper challenge-timeline">
+<div class="timeline-line"></div>
+<article class="timeline-item"><span class="timeline-dot"></span><div class="card boss challenge-card unlocked">
+<img class="boss-image" src="assets/Seathe.png" alt="Seath the Scaleless">
+<div class="challenge-card-body"><h2>SEATH THE SCALELESS</h2><div class="meta">LORD OF · OSINT</div><div class="skull">☠☠░░░</div><div class="status-badge"><span class="status">UNLOCKED</span></div><p class="lore-hint"><i>“In his archives, all secrets rest.”</i></p><button class="btn attempt">ATTEMPT CHALLENGE</button>
+<div class="riddle"><p>By my name the dragon of Lordran is known. Type the archivist's name to kindle this cinder.</p><input class="answer" data-answer="seath" placeholder="Your answer" aria-label="Challenge answer"></div></div>
+</div></article>
+<article class="timeline-item"><span class="timeline-dot"></span><div class="card boss challenge-card sealed">
+<img class="boss-image" src="assets/Dark_Souls_Gravelord_Nito_29.png" alt="Nito, First of the Dead">
+<div class="challenge-card-body"><h2>NITO, FIRST OF THE DEAD</h2><div class="meta">LORD OF · CRYPTOGRAPHY</div><div class="skull">☠☠☠░░</div><div class="status-badge"><span class="status">SEALED</span></div><p class="lore-hint"><i>“Turn each letter back by one: UFTU.”</i></p><button class="btn attempt" disabled>ATTEMPT CHALLENGE</button>
+<div class="riddle"><p>Enter the decoded word.</p><input class="answer" data-answer="test" placeholder="Your answer" aria-label="Challenge answer"></div></div>
+</div></article>
+<article class="timeline-item"><span class="timeline-dot"></span><div class="card boss challenge-card sealed">
+<img class="boss-image" src="assets/Witch_of_izalith2.png" alt="Witch of Izalith">
+<div class="challenge-card-body"><h2>WITCH OF IZALITH</h2><div class="meta">LORD OF · WEB EXPLOITATION</div><div class="skull">☠☠☠☠░</div><div class="status-badge"><span class="status">SEALED</span></div><p class="lore-hint"><i>“Name the first page most web servers seek.”</i></p><button class="btn attempt" disabled>ATTEMPT CHALLENGE</button>
+<div class="riddle"><p>Enter the common default page filename (without extension).</p><input class="answer" data-answer="index" placeholder="Your answer" aria-label="Challenge answer"></div></div>
+</div></article>
+<article class="timeline-item"><span class="timeline-dot"></span><div class="card boss challenge-card sealed">
+<img class="boss-image" src="assets/Four_Kings_Model.png" alt="The Four Kings">
+<div class="challenge-card-body"><h2>THE FOUR KINGS</h2><div class="meta">LORDS OF · REVERSE ENGINEERING</div><div class="skull">☠☠☠☠☠</div><div class="status-badge"><span class="status">SEALED</span></div><p class="lore-hint"><i>“What is the ASCII character for hexadecimal 41?”</i></p><button class="btn attempt" disabled>ATTEMPT CHALLENGE</button>
+<div class="riddle"><p>Enter the decoded character.</p><input class="answer" data-answer="a" placeholder="Your answer" aria-label="Challenge answer"></div></div>
+</div></article>
+</div>
+<button class="btn firelink">LINK THE FIRE</button>
+<div class="final-flame"><img src="assets/bonfire.png" alt="bonfire" style="width: 28px; height: 28px; object-fit: contain; vertical-align: middle;"></div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>

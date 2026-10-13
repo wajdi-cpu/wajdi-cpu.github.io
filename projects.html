@@ -1,5 +1,41 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Forge</title><link rel="icon" type="image/png" href="assets/bonfire.png"><link rel="stylesheet" href="style.css"></head><body style="--page-bg:url('assets/Forge.gif')"><main class="wrap"><h1 class="page-title">THE FORGE</h1><p class="quote">“Strength can be gained, in the soul of the weapon.”</p><div class="grid">
-<article class="card"><h2>ASHEN RECON</h2><div class="meta">TYPE: OSINT TOOL</div><hr class="rule"><p>A humble instrument for gathering scattered traces. It draws public clues into one map, that the seeker may begin with patience.</p><hr class="rule"><div class="meta">DURABILITY: <span style="color:#c9a84c">████████░░ 80%</span><br>TAGS: Python · OSINT</div><div style="margin-top:16px"><button class="btn inspect" data-detail='{"title":"ASHEN RECON","body":"<p>A project placeholder for an OSINT utility. Add a detailed overview, screenshots, and implementation notes here.</p><p><b>STACK:</b> Python · Requests · BeautifulSoup</p> <a class=\"btn\" href=\"#\">SOURCE CODE</a>"}'>INSPECT</button><a class="btn" href="#">VIEW ASHES</a></div></article>
-<article class="card"><h2>EMBER WATCH</h2><div class="meta">TYPE: SECURITY AUTOMATION</div><hr class="rule"><p>From a quiet hearth, watch is kept. A modest script tends the logs and calls attention to patterns worth a closer look.</p><hr class="rule"><div class="meta">DURABILITY: <span style="color:#c9a84c">███████░░░ 70%</span><br>TAGS: Python · Blue Team</div><div style="margin-top:16px"><button class="btn inspect" data-detail='{"title":"EMBER WATCH","body":"<p>A security log triage project. Replace this placeholder with project details.</p><p><b>STACK:</b> Python · Regex · JSON</p>"}'>INSPECT</button><a class="btn" href="#">VIEW ASHES</a></div></article>
-<article class="card"><h2>HOLLOW SIGNAL</h2><div class="meta">TYPE: CTF WRITEUP</div><hr class="rule"><p>One faint signal remained after the chamber fell silent. Follow its path through clues, scripts, and careful observation.</p><hr class="rule"><div class="meta">DURABILITY: <span style="color:#c9a84c">█████████░ 90%</span><br>TAGS: CTF · Reverse Engineering</div><div style="margin-top:16px"><button class="btn inspect" data-detail='{"title":"HOLLOW SIGNAL","body":"<p>A CTF challenge writeup placeholder. Add a walkthrough and artifacts.</p><p><b>STACK:</b> Ghidra · Python</p>"}'>INSPECT</button><a class="btn" href="#">VIEW ASHES</a></div></article>
-</div><div class="modal"><div class="modalbox"><button class="btn modal-close" style="float:right">[ LEAVE ]</button><h2 id="modal-title"></h2><div id="modal-content"></div></div></div></main><script src="script.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Projects</title>
+<link rel="icon" type="image/png" href="assets/bonfire.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body style="--page-bg:url('assets/Forge.gif')">
+<main class="wrap">
+<h1 class="page-title">PROJECTS</h1>
+<p class="page-subtitle">FEATURED WORK</p>
+<p class="quote">“Strength can be gained, in the soul of the weapon.”</p>
+<div class="projects-grid">
+<article class="project-card"><span class="project-type">FRAMEWORK</span><h2>APOLLO</h2>
+<p>An autonomous penetration-testing framework built on the Hermes agent platform. It plans workflows, reasons over findings and attack paths, and retains lessons from prior work.</p>
+<div class="project-tags"><span>Python</span><span>Hermes</span><span>Penetration Testing</span></div><div class="meta project-repo">REPOSITORY: PUBLIC</div>
+<div class="project-actions"><button class="btn inspect" data-detail='{"title":"APOLLO","body":"<p>An autonomous penetration-testing framework built on the Hermes agent platform. It is designed to plan work, reason over findings and attack paths, and retain lessons between engagements.</p><p><b>STACK:</b> Python · Hermes Agent</p>"}'>INSPECT</button><a class="btn" href="https://github.com/wajdi-cpu/Project_Apollo" target="_blank" rel="noopener">VIEW ASHES</a></div></article>
+<article class="project-card"><span class="project-type">HOME LAB SOC</span><h2>HAVENSHIELD</h2>
+<p>This open-source SOC lab combines alert monitoring with case management. It also includes automated response workflows and integrations for Suricata and VirusTotal.</p>
+<div class="project-tags"><span>Wazuh</span><span>Shuffle</span><span>TheHive</span><span>Suricata</span></div><div class="meta project-repo">REPOSITORY: PUBLIC</div>
+<div class="project-actions"><button class="btn inspect" data-detail='{"title":"HavenShield","body":"<p>An open-source SOC for home labs, integrating Wazuh, Shuffle, TheHive, Suricata, and VirusTotal. The repository describes conditional automated response and analyst case management.</p><p><b>STACK:</b> Wazuh · Shuffle · TheHive · Suricata · VirusTotal</p>"}'>INSPECT</button><a class="btn" href="https://github.com/wajdi-cpu/HavenShield" target="_blank" rel="noopener">VIEW ASHES</a></div></article>
+<article class="project-card"><span class="project-type">CLOUD LAB</span><h2>GCP INCIDENT RESPONSE LAB</h2>
+<p>This lab simulates a Google Cloud breach involving a compromised VM and exposed storage. It documents remediation through IAM and firewall changes, logging, and Security Command Center verification.</p>
+<div class="project-tags"><span>GCP</span><span>Incident Response</span><span>Security Command Center</span></div><div class="meta project-repo">REPOSITORY: PUBLIC</div>
+<div class="project-actions"><button class="btn inspect" data-detail='{"title":"GCP Incident Response Lab","body":"<p>A Google Cloud Cybersecurity Certificate capstone simulating a compromised VM and public storage exposure. The response includes rebuilding from a clean snapshot, restricting bucket access, tightening firewall rules, enabling logging, and verifying remediation in Security Command Center.</p><p><b>TOOLS:</b> Google Cloud Security Command Center · Compute Engine · Cloud Storage IAM · VPC Firewall Rules</p>"}'>INSPECT</button><a class="btn" href="https://github.com/wajdi-cpu/gcp-incident-response-lab" target="_blank" rel="noopener">VIEW ASHES</a></div></article>
+<article class="project-card"><span class="project-type">CLOUD APPLICATION</span><h2>AZUREVAULT</h2>
+<p>This Flask application stores files in Azure Blob Storage. Its VM runs without a public IP inside a virtual network, with administrative access through Azure Bastion.</p>
+<div class="project-tags"><span>Python</span><span>Flask</span><span>Azure</span><span>Blob Storage</span></div><div class="meta project-repo">REPOSITORY: PUBLIC</div>
+<div class="project-actions"><button class="btn inspect" data-detail='{"title":"AzureVault","body":"<p>A Flask web application for uploading, downloading, and deleting files stored in Azure Blob Storage. The VM is isolated in a VNet without a public IP, with SSH access through Azure Bastion.</p><p><b>STACK:</b> Python · Flask · Azure Blob Storage · Azure VNet · Bastion</p>"}'>INSPECT</button><a class="btn" href="https://github.com/wajdi-cpu/AzureVault" target="_blank" rel="noopener">VIEW ASHES</a></div></article>
+<article class="project-card"><span class="project-type">EMBEDDED SYSTEMS</span><h2>GRIPARM</h2>
+<p>This project builds a Bluetooth-controlled robotic arm with five degrees of freedom. Arduino operates the arm while an ESP32 remote reads joysticks and buttons.</p>
+<div class="project-tags"><span>C++</span><span>Arduino</span><span>ESP32</span><span>Bluetooth</span></div><div class="meta project-repo">REPOSITORY: PUBLIC</div>
+<div class="project-actions"><button class="btn inspect" data-detail='{"title":"GripARM","body":"<p>A Bluetooth-controlled robotic arm with five servo motors. Arduino operates the arm, while an ESP32-based remote uses joysticks and buttons. The repository includes source code for both units, a component list, and a design and assembly report.</p><p><b>STACK:</b> C++ · Arduino · ESP32 · Bluetooth</p>"}'>INSPECT</button><a class="btn" href="https://github.com/wajdi-cpu/GripARM" target="_blank" rel="noopener">VIEW ASHES</a></div></article>
+</div>
+<div class="modal"><div class="modalbox"><button class="btn modal-close" style="float:right">[ LEAVE ]</button><h2 id="modal-title"></h2><div id="modal-content"></div></div></div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
